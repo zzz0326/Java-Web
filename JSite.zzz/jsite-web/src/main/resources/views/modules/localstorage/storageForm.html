@@ -1,0 +1,83 @@
+<% layout('/layout/default.html', {title: '32321', libs: ['validate']}){ %>
+<div class="main-content">
+	<div class="box box-main">
+		<div class="box-header">
+			<div class="box-title">
+				<i class="fa fa-pencil-square-o"></i> 32321
+			</div>
+		</div>
+		<#form:form id="inputForm" model="${storage}" action="${ctx}/localstorage/storage/save" method="post" class="form-horizontal">
+			<div class="box-body">
+				<#form:hidden path="id"/>
+				<#form:hidden path="act.taskId" value="${storage.act.taskId}"/>
+				<#form:hidden path="act.taskName" value="${storage.act.taskName}"/>
+				<#form:hidden path="act.taskDefKey" value="${storage.act.taskDefKey}"/>
+				<#form:hidden path="act.procInsId" value="${storage.act.procInsId}"/>
+				<#form:hidden path="act.procDefId" value="${storage.act.procDefId}"/>
+				<#form:hidden id="flag" path="act.flag"/>
+
+
+				<table class="table-view">
+					<tr>
+                        <td class="tit"><span class="required hide">*</span>warehouse_id<i class="fa icon-question hide"></i></td>
+                        <td>
+								<#form:input path="warehouseId"  maxlength="255" class="form-control required  "/>
+                        </td>
+                        <td class="tit">cargo_id</td>
+                        <td>
+								<#form:input path="cargoId"  maxlength="11" class="form-control  "/>
+                        </td>
+					</tr>
+					<tr>
+                        <td class="tit">remaining</td>
+                        <td>
+								<#form:input path="remaining"  maxlength="255" class="form-control  "/>
+                        </td>
+                        <td class="tit">need</td>
+                        <td>
+								<#form:input path="need"  maxlength="255" class="form-control  "/>
+                        </td>
+					</tr>
+
+
+				</table>
+			</div>
+			
+			<div class="box-footer">
+				<div class="row">
+					<div class="col-sm-offset-2 col-sm-10">
+					<% if (hasPermi('localstorage:storage:edit')){ %>
+						<button type="submit" class="btn btn-sm btn-primary" id="btnSubmit" onclick="$('#flag').val('yes')" ><i class="fa fa-check"></i> 发起流程</button>
+
+						<% if (!isEmpty(storage.id)){ %>
+							<button type="submit" class="btn btn-sm btn-danger" id="btnSubmit" onclick="$('#flag').val('no')" ><i class="fa fa-check"></i> 结束流程</button>
+						<% } %>
+
+					<% } %>
+						<button type="button" class="btn btn-sm btn-default" id="btnCancel" onclick="window.parent.closeCurrentTabPage();"><i class="fa fa-reply-all"></i> 关 闭</button>
+					</div>
+				</div>
+			</div>
+
+		</#form:form>
+
+		<% if (!isEmpty(storage.id)){ %>
+			<#form:histoicFlow procInsId="${storage.act.procInsId}" isSubTag="false"/>
+		<% } %>
+
+	</div>
+</div>
+<% } %>
+
+<script type="text/javascript">
+	$("#inputForm").validate({
+		submitHandler: function(form){
+			js.ajaxSubmitForm($(form), function(data){
+				js.showMessage(data.message);
+				if(data.result == 'true'){
+					window.parent.closeCurrentTabPage(window.parent.refreshTab);
+				}
+			});
+	    }
+	});
+</script>

@@ -1,0 +1,61 @@
+<% layout('/layout/default.html', {title: '关联查询', libs: ['dataGrid']}){ %>
+<div class="main-content">
+	<div class="box box-main">
+		<div class="box-header">
+			<div class="box-title">
+				<i class="fa fa-cubes"></i> 关联查询
+			</div>
+			<div class="box-tools pull-right">
+				<a href="#" class="btn btn-default" id="btnSearch" title="查询"><i class="fa fa-filter"></i> 查询</a>
+
+			</div>
+		</div>
+		<div class="box-body">
+            <form id="searchForm" action="${ctx}/supply/supplyInf/listData" method="post" class="form-inline hide" >
+				<div class="form-group">
+					<label class="control-label">供应商：</label>
+					<div class="control-inline">
+						<#form:select path="supplier" name="supplier" value="supplier" data="${supplierList}" class="form-control required " />
+					</div>
+                    <div class="form-group">
+                        <label class="control-label">产品名称 ：</label>
+                        <div class="control-inline">
+                            <input name="product" maxlength="50" class="form-control"/>
+                        </div>
+                    </div>
+				</div>
+				<div class="form-group">
+					<button type="submit" class="btn btn-primary btn-sm" >查询</button>
+					<button id="reset" type="reset" class="btn btn-default btn-sm">重置</button>
+				</div>
+
+            </form>
+			<table id="dataGrid"></table>
+			<div id="dataGridPage"></div>
+		</div>
+	</div>
+</div>
+<% } %>
+<script>
+//初始化DataGrid对象
+$('#dataGrid').dataGrid({
+	searchForm: $("#searchForm"),
+	columnModel: [
+		{header:'供应商单位', name:'supplier', index:'a.supplier', width:90, align:"center"},
+		{header:'供应产品名称', name:'product', index:'a.product', width:90, align:"center"},
+		{header:'供应商地址', name:'address', index:'a.address', width:90, align:"center"},
+		{header:'负责人', name:'principal', index:'a.principal', width:90, align:"center"},
+		{header:'联系电话', name:'phonenum', index:'a.phonenum', width:90, align:"center"}
+	],
+	// 加载成功后执行事件
+	ajaxSuccess: function(data){
+
+	}
+});
+
+
+$('#reset').click(function(){
+	$('#category').val(null).trigger("change");
+});
+
+</script>

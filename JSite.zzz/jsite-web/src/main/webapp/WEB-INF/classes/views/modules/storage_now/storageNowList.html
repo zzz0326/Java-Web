@@ -1,0 +1,36 @@
+<% layout('/layout/default.html', {title: '成功', libs: ['dataGrid']}){ %>
+<div class="main-content">
+	<div class="box box-main">
+		<div class="box-header">
+			<div class="box-title">
+				<i class="fa fa-cubes"></i> 现存量查询
+			</div>
+		</div>
+
+			<form id="searchForm" action="${ctx}/storage_now/storageNow/listData" method="post" class="form-inline hide" >
+			</form>			
+			<table id="dataGrid"></table>
+			<div id="dataGridPage"></div>
+
+	</div>
+</div>
+<% } %>
+<script>
+//初始化DataGrid对象
+$('#dataGrid').dataGrid({
+	searchForm: $("#searchForm"),
+	columnModel: [
+		{header:'仓库编码', name:'warehouseId', index:'a.warehouseId', width:90, align:"center"},
+		{header:'存货编码', name:'stockId', index:'a.stockId', width:90, align:"center"},
+		{header:'现存量', name:'stockExit', index:'a.stockExit', width:90, align:"center"},
+		{header:'现存件数', name:'exitNumber', index:'a.exitNumber', width:90, align:"center"},
+		{header:'可用量', name:'useable', index:'a.useable', width:90, align:"center"},
+		{header:'可用件数', name:'useableNumber', index:'a.useableNumber', width:90, align:"center"}
+	],
+	// 加载成功后执行事件
+	ajaxSuccess: function(data){
+		
+	}
+});
+
+</script>

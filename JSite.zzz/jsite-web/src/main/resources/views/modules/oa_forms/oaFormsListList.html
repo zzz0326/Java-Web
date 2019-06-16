@@ -1,0 +1,91 @@
+<% layout('/layout/default.html', {title: '报表信息', libs: ['dataGrid']}){ %>
+<div class="main-content">
+	<div class="box box-main">
+		<div class="box-header">
+			<div class="box-title">
+				<i class="fa fa-cubes"></i> 报表信息
+			</div>
+			<div class="box-tools pull-right">
+				<a href="#" class="btn btn-default" id="btnSearch" title="查询"><i class="fa fa-filter"></i> 查询</a>
+				<% if(hasPermi('oa_forms:oaFormsList:edit')){ %>
+					<a href="/oa_forms/oaFormsList/form" class="btn btn-default btnTool"  title="新增报表信息"><i class="fa fa-plus"></i> 新增</a>
+				<% } %>
+			</div>
+		</div>
+		<div class="box-body">
+			<form id="searchForm" action="${ctx}/oa_forms/oaFormsList/listData" method="post" class="form-inline hide" >
+				<div class="form-group">
+					<label class="control-label">文件名：</label>
+					<div class="control-inline">
+						<input name="filename"  maxlength="32" class="form-control"/>
+					</div>
+				</div>
+				<div class="form-group">
+					<label class="control-label">上传时间：</label>
+					<div class="control-inline">
+						<input id="uploadtime" name="uploadtime" maxlength="20" readonly="readonly" class="form-control "
+							value="" onclick="WdatePicker({dateFmt:'yyyy-MM-dd HH:mm:ss',isShowClear:false});" />
+					</div>
+				</div>
+				<div class="form-group">
+					<label class="control-label">报表类型：</label>
+					<div class="control-inline">
+						<input name="formType"  maxlength="5" class="form-control"/>
+					</div>
+				</div>
+				<div class="form-group">
+					<label class="control-label">上传者：</label>
+					<div class="control-inline">
+						<input name="uploader"  maxlength="64" class="form-control"/>
+					</div>
+				</div>
+				<div class="form-group">
+					<label class="control-label">备注：</label>
+					<div class="control-inline">
+						<input name="remark"  maxlength="255" class="form-control"/>
+					</div>
+				</div>
+				
+				<div class="form-group">
+					<button type="submit" class="btn btn-primary btn-sm">查询</button>
+					<button type="reset" class="btn btn-default btn-sm">重置</button>
+				</div>
+			</form>			
+			<table id="dataGrid"></table>
+			<div id="dataGridPage"></div>
+
+		</div>
+	</div>
+</div>
+<% } %>
+<script>
+//初始化DataGrid对象
+$('#dataGrid').dataGrid({
+	searchForm: $("#searchForm"),
+	columnModel: [
+		{header:'文件名', name:'filename', index:'a.filename', width:90, align:"center"},
+		{header:'上传时间', name:'uploadtime', index:'a.uploadtime', width:90, align:"center"},
+		{header:'报表类型', name:'formType', index:'a.form_type', width:90, align:"center"},
+		{header:'上传者', name:'uploader', index:'a.uploader', width:90, align:"center"},
+		{header:'操作', name:'actions', width:100, sortable:false, title:false, align:"center",formatter: function(val, obj, row, act){
+
+			var actions = [];
+		//	actions.push('<a href="/oa_forms/oaFormsList/download?id='+row.id+'" class="btnList" title="下载"><i class="fa fa-download"></i></a>&nbsp;');
+                	actions.push('<a href="${ctx}/oa_forms/oaFormsList/download?id='+row.id+'" title="下载" class="btn btn-default">下载<i class="fa fa-download"></i></a>');
+			<% if (hasPermi('oa_forms:oaFormsList:edit')){ %>
+                    actions.push('<a href="${ctx}/oa_forms/oaFormsList/delete?id='+row.id+'" class="btnList" title="删除文件" data-confirm="确认要删除该文件吗？"><i class="fa fa-trash-o"></i></a>&nbsp;');
+
+			<% } %>
+
+					//	actions.push('<a href="/oa_forms/oaFormsList/download?id='+row.id+'" class="btnList" title="下载"><i class="fa fa-download"></i></a>&nbsp;');
+			return actions.join('');
+		}}
+	],
+	// 加载成功后执行事件
+	ajaxSuccess: function(data){
+
+	}
+});
+
+</script>
+

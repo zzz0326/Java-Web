@@ -1,0 +1,33 @@
+<% layout('/layout/default.html', {title: '记录保存成功', libs: ['dataGrid']}){ %>
+<div class="main-content">
+	<div class="box box-main">
+		<div class="box-header">
+			<div class="box-title">
+				<i class="fa fa-cubes"></i> 记录保存成功
+			</div>
+			<form id="searchForm" action="${ctx}/storage.record/storageRecord/listData" method="post" class="form-inline hide" >
+			</form>
+			<table id="dataGrid"></table>
+			<div id="dataGridPage"></div>
+		</div>
+	</div>
+</div>
+<% } %>
+<script>
+//初始化DataGrid对象
+$('#dataGrid').dataGrid({
+	searchForm: $("#searchForm"),
+	columnModel: [
+		{header:'流程号', name:'processId', index:'a.processId', width:90, align:"center"},
+		{header:'时间', name:'starttiem', index:'a.starttiem', width:90, align:"center"},
+		{header:'仓库号', name:'warehouseId', index:'a.warehouseId', width:90, align:"center"},
+		{header:'货物号', name:'cargoId', index:'a.cargoId', width:90, align:"center"},
+		{header:'需要量', name:'need', index:'a.need', width:90, align:"center"}
+	],
+	ajaxSuccess: function(data){
+
+	}
+
+});
+
+</script>

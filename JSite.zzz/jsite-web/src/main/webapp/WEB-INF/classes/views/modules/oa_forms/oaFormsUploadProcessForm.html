@@ -1,0 +1,85 @@
+<% layout('/layout/default.html', {title: '报表流程', libs: ['validate']}){ %>
+<div class="main-content">
+	<div class="box box-main">
+		<div class="box-header">
+			<div class="box-title">
+				<i class="fa fa-pencil-square-o"></i> 报表流程
+			</div>
+		</div>
+		<#form:form id="inputForm" model="${oaFormsUploadProcess}" action="${ctx}/oa_forms/oaFormsUploadProcess/save" method="post" class="form-horizontal">
+			<div class="box-body">
+				<#form:hidden path="id"/>
+				<#form:hidden path="act.taskId" value="${oaFormsUploadProcess.act.taskId}"/>
+				<#form:hidden path="act.taskName" value="${oaFormsUploadProcess.act.taskName}"/>
+				<#form:hidden path="act.taskDefKey" value="${oaFormsUploadProcess.act.taskDefKey}"/>
+				<#form:hidden path="act.procInsId" value="${oaFormsUploadProcess.act.procInsId}"/>
+				<#form:hidden path="act.procDefId" value="${oaFormsUploadProcess.act.procDefId}"/>
+				<#form:hidden id="flag" path="act.flag"/>
+
+
+				<div class="row">
+					<div class="col-xs-12">
+						<div class="form-group">
+							<label class="control-label col-sm-2" title="开始时间">
+								<span class="required " aria-required="true">*</span> 开始时间：<i
+									class="fa icon-question hide"></i></label>
+							<div class="col-sm-4">
+								<input id="startTime" name="startTime" maxlength="64" readonly="readonly" class="form-control required" value="" onclick="WdatePicker({dateFmt:'yyyy-MM-dd HH:mm:ss',isShowClear:false});"/>
+							</div>
+						</div>
+					</div>
+				</div>
+
+				<div class="row">
+					<div class="col-xs-12">
+						<div class="form-group">
+							<label class="control-label col-sm-2" title="备注信息">
+								<span class="required " aria-required="true">*</span>备注信息：<i
+									class="fa icon-question hide"></i>
+							</label>
+							<div class="col-sm-10">
+								<#form:textarea path="remarks" rows="4" maxlength="255" class="form-control	input-xxlarge "/>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			
+			<div class="box-footer">
+				<div class="row">
+					<div class="col-sm-offset-2 col-sm-10">
+					<% if (hasPermi('oa_forms:oaFormsUploadProcess:edit')){ %>
+						<button type="submit" class="btn btn-sm btn-primary" id="btnSubmit" onclick="$('#flag').val('yes')" ><i class="fa fa-check"></i> 发起流程</button>
+
+						<% if (!isEmpty(oaFormsUploadProcess.id)){ %>
+							<button type="submit" class="btn btn-sm btn-danger" id="btnSubmit" onclick="$('#flag').val('no')" ><i class="fa fa-check"></i> 结束流程</button>
+						<% } %>
+
+					<% } %>
+						<button type="button" class="btn btn-sm btn-default" id="btnCancel" onclick="window.parent.closeCurrentTabPage();"><i class="fa fa-reply-all"></i> 关 闭</button>
+					</div>
+				</div>
+			</div>
+
+		</#form:form>
+
+		<% if (!isEmpty(oaFormsUploadProcess.id)){ %>
+			<#form:histoicFlow procInsId="${oaFormsUploadProcess.act.procInsId}" isSubTag="false"/>
+		<% } %>
+
+	</div>
+</div>
+<% } %>
+
+<script type="text/javascript">
+	$("#inputForm").validate({
+		submitHandler: function(form){
+			js.ajaxSubmitForm($(form), function(data){
+				js.showMessage(data.message);
+				if(data.result == 'true'){
+					window.parent.closeCurrentTabPage(window.parent.refreshTab);
+				}
+			});
+	    }
+	});
+</script>

@@ -1,0 +1,121 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jsite.modules.oa_forms.dao.OaFormsListDao">
+    
+	<sql id="oaFormsListColumns">
+				a.id AS "id",
+		a.filename AS "filename",
+		a.uploadtime AS "uploadtime",
+		a.form_type AS "formType",
+		a.uploader AS "uploader",
+		a.path AS "path",
+		a.filesize AS "filesize",
+		a.remark AS "remark"
+	</sql>
+	
+	<sql id="oaFormsListJoins">
+	</sql>
+    
+	<select id="get" resultType="OaFormsList">
+		SELECT 
+			<include refid="oaFormsListColumns"/>
+		FROM oa_forms_list a
+		<include refid="oaFormsListJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="OaFormsList">
+		SELECT 
+			<include refid="oaFormsListColumns"/>
+		FROM oa_forms_list a
+		<include refid="oaFormsListJoins"/>
+		<where>
+			
+			<if test="filename != null and filename != ''">
+				AND a.filename LIKE 
+					<if test="dbName == 'oracle'">'%'||#{filename}||'%'</if>
+					<if test="dbName == 'mssql'">'%'+#{filename}+'%'</if>
+					<if test="dbName == 'mysql'">concat('%',#{filename},'%')</if>
+			</if>
+			<if test="uploadtime != null and uploadtime != ''">
+				AND a.uploadtime = #{uploadtime}
+			</if>
+			<if test="formType != null and formType != ''">
+				AND a.form_type = #{formType}
+			</if>
+			<if test="uploader != null and uploader != ''">
+				AND a.uploader = #{uploader}
+			</if>
+			<if test="remark != null and remark != ''">
+				AND a.remark LIKE 
+					<if test="dbName == 'oracle'">'%'||#{remark}||'%'</if>
+					<if test="dbName == 'mssql'">'%'+#{remark}+'%'</if>
+					<if test="dbName == 'mysql'">concat('%',#{remark},'%')</if>
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="OaFormsList">
+		SELECT 
+			<include refid="oaFormsListColumns"/>
+		FROM oa_forms_list a
+		<include refid="oaFormsListJoins"/>
+		<where>
+			
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO oa_forms_list(
+			id,
+			filename,
+			uploadtime,
+			form_type,
+			uploader,
+			path,
+			filesize,
+			remark
+		) VALUES (
+			#{id},
+			#{filename},
+			#{uploadtime},
+			#{formType},
+			#{uploader},
+			#{path},
+			#{filesize},
+			#{remark}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE oa_forms_list SET 	
+			filename = #{filename},
+			uploadtime = #{uploadtime},
+			form_type = #{formType},
+			uploader = #{uploader},
+			path = #{path},
+			filesize = #{filesize},
+			remark = #{remark}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		DELETE FROM oa_forms_list
+		WHERE id = #{id}
+	</update>
+	
+</mapper>

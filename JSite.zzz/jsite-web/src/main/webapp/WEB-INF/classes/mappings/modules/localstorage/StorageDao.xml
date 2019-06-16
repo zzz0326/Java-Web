@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jsite.modules.localstorage.dao.StorageDao">
+    
+	<sql id="storageColumns">
+		a.warehouse_id AS "warehouseId",
+		a.cargo_id AS "cargoId",
+		a.remaining AS "remaining",
+		a.id AS "id",
+		a.need AS "need"
+	</sql>
+	
+	<sql id="storageJoins">
+	</sql>
+    
+	<select id="get" resultType="Storage">
+		SELECT 
+			<include refid="storageColumns"/>
+		FROM storage a
+		<include refid="storageJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="Storage">
+		SELECT 
+			<include refid="storageColumns"/>
+		FROM storage a
+		<include refid="storageJoins"/>
+		<where>
+			
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="Storage">
+		SELECT 
+			<include refid="storageColumns"/>
+		FROM storage a
+		<include refid="storageJoins"/>
+		<where>
+			
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO storage(
+			warehouse_id,
+			cargo_id,
+			remaining,
+			id,
+			need
+		) VALUES (
+			#{warehouseId},
+			#{cargoId},
+			#{remaining},
+			#{id},
+			#{need}
+		)
+	</insert>
+	
+	<update id="update" >
+		UPDATE storage SET 	
+			warehouse_id = #{warehouseId},
+			cargo_id = #{cargoId},
+			remaining = #{remaining},
+			need = #{need}
+		WHERE id = #{id}
+	</update>
+
+
+
+
+	
+	<update id="delete">
+		DELETE FROM storage
+		WHERE id = #{id}
+	</update>
+	
+</mapper>

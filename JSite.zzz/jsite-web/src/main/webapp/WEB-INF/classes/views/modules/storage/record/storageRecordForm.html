@@ -1,0 +1,100 @@
+<% layout('/layout/default.html', {title: '记录保存成功详情', libs: ['validate', 'icheck']}){ %>
+<div class="main-content">
+	<div class="box box-main">
+		<div class="box-header with-border">
+			<div class="box-title">
+				<i class="fa fa-pencil-square-o"></i> ${storageRecord.isNewRecord?'新增记录保存成功':'编辑记录保存成功'}
+			</div>
+			<div class="box-tools pull-right">
+				<button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i></button>
+			</div>
+		</div>
+		<#form:form id="inputForm" model="${storageRecord}" action="${ctx}/storage.record/storageRecord/save" method="post" class="form-horizontal">
+			<div class="box-body">
+				<#form:hidden path="id"/>
+				<div class="row">
+					<div class="col-xs-6">
+						<div class="form-group">
+							<label class="control-label col-sm-4" title="">
+							 starttiem：
+							</label>
+							<div class="col-sm-8">
+								<input id="starttiem" type="text" name="starttiem" maxlength="20" readonly="readonly" class="form-control  "
+										value="${storageRecord.starttiem}" onclick="WdatePicker({dateFmt:'yyyy-MM-dd HH:mm:ss',isShowClear:false});" />
+							</div>
+						</div>
+					</div>
+					<div class="col-xs-6">
+						<div class="form-group">
+							<label class="control-label col-sm-4" title="">
+							 warehouse_id：
+							</label>
+							<div class="col-sm-8">
+								<#form:input path="warehouseId"  maxlength="255" class="form-control  "/>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="row">
+					<div class="col-xs-6">
+						<div class="form-group">
+							<label class="control-label col-sm-4" title="">
+							 cargo_id：
+							</label>
+							<div class="col-sm-8">
+								<#form:input path="cargoId"  maxlength="11" class="form-control  "/>
+							</div>
+						</div>
+					</div>
+					<div class="col-xs-6">
+						<div class="form-group">
+							<label class="control-label col-sm-4" title="">
+							 need：
+							</label>
+							<div class="col-sm-8">
+								<#form:input path="need"  maxlength="255" class="form-control  "/>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="row">
+					<div class="col-xs-6">
+						<div class="form-group">
+							<label class="control-label col-sm-4" title="">
+							 process_id：
+							</label>
+							<div class="col-sm-8">
+								<#form:input path="processId"  maxlength="255" class="form-control  "/>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			
+			<div class="box-footer">
+				<div class="row">
+					<div class="col-sm-offset-2 col-sm-10">
+						<% if (hasPermi('storage.record:storageRecord:edit')){ %>
+							<button type="submit" class="btn btn-sm btn-primary" id="btnSubmit"><i class="fa fa-check"></i> 保 存</button>
+						<% } %>
+						<button type="button" class="btn btn-sm btn-default" id="btnCancel" onclick="window.parent.closeCurrentTabPage()"><i class="fa fa-reply-all"></i> 关 闭</button>
+					</div>
+				</div>
+			</div>
+		</#form:form>
+	</div>
+</div>
+<% } %>
+
+<script type="text/javascript">
+	$("#inputForm").validate({
+		submitHandler: function(form){
+			js.ajaxSubmitForm($(form), function(data){
+				js.showMessage(data.message);
+				if(data.result == 'true'){
+					window.parent.closeCurrentTabPage(window.parent.refreshTab);
+				}
+			});
+	    }
+	});
+</script>

@@ -1,0 +1,114 @@
+<% layout('/layout/default.html', {title: '添加报表', libs: ['dataGrid']}){ %>
+<div class="main-content">
+    <div class="box box-main">
+        <div class="box-header">
+            <div class="box-title">
+                <i class="fa fa-cubes"></i> 添加报表
+            </div>
+        </div>
+        <form id="addDataFormForm" action="${ctx}/oa_forms/addDataForm/add" method="post">
+            <div class="box-header" style="position: relative;">
+                <input type="text" name="name" placeholder="请输入报表名" class="form-control" style="width: 50%;float:left;">
+                <div style="text-align: right;">
+                    <a href="#" title="添加列" class="btn btn-default btnTool">添加列</a>
+                    <a href="/oa_forms/addDataForm/add" title="保存数据表" class="btn btn-default btnTool">保存数据表</a>
+                </div>
+            </div>
+            <div class="box-body">
+                <table class="ui-jqgrid-htable" style="width: 1132px;" role="presentation"
+                       aria-labelledby="gbox_dataGrid" cellspacing="0" cellpadding="0" border="0" id="dataGrid">
+            </div>
+        </form>
+    </div>
+</div>
+<% } %>
+<script>
+    var data = {
+        "name": "",
+        "columns": [],
+        "data": {}
+    };
+    var demo = {
+        "name": "QWQ",
+        "columns": ["A", "b", "C"],
+        "data": [{
+            "id": "123",
+            "name": "asdf4454",
+            "data": [
+                {
+                    "col_id": 0,
+                    "count": 0,
+                    "price": 12.3
+                }
+            ]
+        }]
+    };
+    var createElem = function (elemType, text, rowspan, colspan, klass, id, role) {
+        var ret = document.createElement(elemType);
+        if (text) ret.innerText = text;
+        if (rowspan) ret.rowSpan = rowspan;
+        if (colspan) ret.colSpan = colspan;
+        if (klass) ret.className = klass;
+        if (id) ret.id = id;
+        if (role) ret.setAttribute('role', role);
+        return ret;
+    };
+    var json2tab = function (data) {
+        var tableHead = document.createElement("tr");
+        tableHead.className = 'ui-jqgrid-labels';
+        tableHead.setAttribute('role', 'row');
+        var tableHead2 = document.createElement("tr");
+        tableHead2.className = 'ui-jqgrid-labels';
+        tableHead2.setAttribute('role', 'row');
+        var tableBody = [];
+        var elems = [];
+        tableHead.appendChild(createElem("th", "项目编码", 2, 1, 'ui-state-default ui-th-column ui-th-ltr', '', 'columnheader'));
+        tableHead.appendChild(createElem("th", "项目", 2, 1, 'ui-state-default ui-th-column ui-th-ltr', '', 'columnheader'));
+        var common_td = document.createElement("td");
+        common_td.onclick = function () {
+            this.contenteditable = true;
+        };
+        common_td.onblur = function () {
+            this.contenteditable = false;
+        };
+        common_td.className = "ui-widget-content jqgrow ui-row-ltr";
+        for (var i in data["columns"]) {
+            tableHead.appendChild(createElem("th", data["columns"][i], 1, 2));
+            tableHead2.appendChild(createElem("th", "数量", 1, 1, 'ui-state-default ui-th-column ui-th-ltr', '', 'columnheader'));
+            tableHead2.appendChild(createElem("th", "价格", 1, 1, 'ui-state-default ui-th-column ui-th-ltr', '', 'columnheader'));
+            elems.push(common_td);
+            elems.push(common_td);
+        }
+        for (var i in data["data"]) {
+            var tr = document.createElement(tr);
+            tr.appendChild(createElem("td", data["data"][i]["id"], 1, 1, "ui-widget-content jqgrow ui-row-ltr"));
+            tr.appendChild(createElem("td", data["data"][i]["name"], 1, 1, "ui-widget-content jqgrow ui-row-ltr"));
+            tr.className = "ui-jqgrid-labels";
+            var elems2 = elems.slice();
+            for (var dt in data["data"][i]["data"]) {
+                elems2[2 * data["data"][i]["data"][dt]["col_id"]].innerText = data["data"][i]["data"][dt]["count"];
+                elems2[2 * data["data"][i]["data"][dt]["col_id"] + 1].innerText = data["data"][i]["data"][dt]["price"];
+            }
+            for (var m in elems2) {
+                tr.appendChild(elems2[m]);
+            }
+            tableBody.push(tr);
+        }
+        var HTML = "";
+        HTML += tableHead.outerHTML;
+        HTML += tableHead2.outerHTML;
+        for (var i in tableBody) {
+            HTML += tableBody[i].outerHTML;
+        }
+        return HTML + "<tr><td><input type='text' placeholder='请输入报表编码'></td><td><input type='text' placeholder='请输入报表名'></td></tr>";
+    };
+
+    var refresh = function () {
+        $('#dataGrid').html(json2tab(demo));
+    };
+
+    refresh();
+    // TODO: 点击添加列按钮之后能够添加新列
+    // TODO: 输入报表编码及报表名之后回车可以添加新行
+    // TODO: 点击保存按钮之后保存当前的数据
+</script>

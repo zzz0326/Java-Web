@@ -1,0 +1,109 @@
+<% layout('/layout/default.html', {title: '成功详情', libs: ['validate', 'icheck']}){ %>
+<div class="main-content">
+	<div class="box box-main">
+		<div class="box-header with-border">
+			<div class="box-title">
+				<i class="fa fa-pencil-square-o"></i> ${storageNow.isNewRecord?'新增成功':'编辑成功'}
+			</div>
+			<div class="box-tools pull-right">
+				<button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i></button>
+			</div>
+		</div>
+		<#form:form id="inputForm" model="${storageNow}" action="${ctx}/storage_now/storageNow/save" method="post" class="form-horizontal">
+			<div class="box-body">
+				<#form:hidden path="id"/>
+				<div class="row">
+					<div class="col-xs-6">
+						<div class="form-group">
+							<label class="control-label col-sm-4" title="">
+							<span class="required hide">*</span> warehouse_id：<i class="fa icon-question hide"></i>
+							</label>
+							<div class="col-sm-8">
+								<#form:input path="warehouseId"  maxlength="5" class="form-control required  "/>
+							</div>
+						</div>
+					</div>
+					<div class="col-xs-6">
+						<div class="form-group">
+							<label class="control-label col-sm-4" title="">
+							<span class="required hide">*</span> stock_id：<i class="fa icon-question hide"></i>
+							</label>
+							<div class="col-sm-8">
+								<#form:input path="stockId"  maxlength="30" class="form-control required  "/>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="row">
+					<div class="col-xs-6">
+						<div class="form-group">
+							<label class="control-label col-sm-4" title="">
+							 stock_exit：
+							</label>
+							<div class="col-sm-8">
+								<#form:input path="stockExit"  maxlength="255" class="form-control  "/>
+							</div>
+						</div>
+					</div>
+					<div class="col-xs-6">
+						<div class="form-group">
+							<label class="control-label col-sm-4" title="">
+							 exit_number：
+							</label>
+							<div class="col-sm-8">
+								<#form:input path="exitNumber"  maxlength="255" class="form-control  "/>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="row">
+					<div class="col-xs-6">
+						<div class="form-group">
+							<label class="control-label col-sm-4" title="">
+							 useable：
+							</label>
+							<div class="col-sm-8">
+								<#form:input path="useable"  maxlength="255" class="form-control  "/>
+							</div>
+						</div>
+					</div>
+					<div class="col-xs-6">
+						<div class="form-group">
+							<label class="control-label col-sm-4" title="">
+							 useable_number：
+							</label>
+							<div class="col-sm-8">
+								<#form:input path="useableNumber"  maxlength="255" class="form-control  "/>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			
+			<div class="box-footer">
+				<div class="row">
+					<div class="col-sm-offset-2 col-sm-10">
+						<% if (hasPermi('storage_now:storageNow:edit')){ %>
+							<button type="submit" class="btn btn-sm btn-primary" id="btnSubmit"><i class="fa fa-check"></i> 保 存</button>
+						<% } %>
+						<button type="button" class="btn btn-sm btn-default" id="btnCancel" onclick="window.parent.closeCurrentTabPage()"><i class="fa fa-reply-all"></i> 关 闭</button>
+					</div>
+				</div>
+			</div>
+		</#form:form>
+	</div>
+</div>
+<% } %>
+
+<script type="text/javascript">
+	$("#inputForm").validate({
+		submitHandler: function(form){
+			js.ajaxSubmitForm($(form), function(data){
+				js.showMessage(data.message);
+				if(data.result == 'true'){
+					window.parent.closeCurrentTabPage(window.parent.refreshTab);
+				}
+			});
+	    }
+	});
+</script>

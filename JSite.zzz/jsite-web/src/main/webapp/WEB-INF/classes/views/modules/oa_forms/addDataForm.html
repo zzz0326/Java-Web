@@ -1,0 +1,183 @@
+<% layout('/layout/default.html', {title: '数据表预览', libs: ['dataGrid']}){ %>
+<div class="main-content">
+    <div class="box box-main">
+        <div class="box-header">
+            <div class="box-title">
+                <i class="fa fa-cubes"></i> 预览 - ${formName}
+            </div>
+        </div>
+    </div>
+</div>
+<% } %>
+<script>
+    var jqdata = [{"编号": 01, "名称": "QAQ"}, {"编号": 02, "名称": "QWQ"}];
+    var jqColName = [["编号"], ["名称"], ["Test", ["Test1", "Test2", "Test3"]], ["Test4", ["Test5", "Test6"]], ["Test7", ["Test8"]]];
+
+    function initSelect() {
+        $.each(jqColName, function (index, val) {
+            if (index <= 1) return;
+            $("#new_col_parent").append("<option value ='" + index.toString() + "'>" + val[0] + "</option>");
+        })
+    }
+
+    function refreshDeleteList() {
+        var delete_selection = $("#delete_col");
+        delete_selection.html("<option value='-1'>---</option>");
+        var delete_index = 0;
+        $.each(jqColName, function (index, value) {
+            if (index <= 1) return delete_index += 1;
+            delete_selection.append("<option value='" + delete_index.toString() + "'>" + value[0] + "</option>")
+            delete_index += 1;
+            if (value[1]) {
+                $.each(value[1], function (index, value) {
+                    delete_selection.append("<option value='" + delete_index.toString() + "'>" + value + "</option>")
+                    delete_index += 1;
+                })
+            }
+        })
+    }
+
+    function addNewColumn() {
+        var col_name = $('#new_col_name').val();
+        var col_pare = $('#new_col_parent').val();
+        if (!col_name) {
+            alert("列名不能为空！");
+            return;
+        }
+        if ("-1" == col_pare) {
+            jqColName.push([col_name]);
+            $("#new_col_parent").append("<option value ='" + (jqColName.length - 1).toString() + "'>" + col_name + "</option>");
+        } else {
+            if (jqColName[Number(col_pare)][1]) {
+                jqColName[Number(col_pare)][1].push(col_name);
+            } else {
+                jqColName[Number(col_pare)].push([col_name]);
+            }
+        }
+        refreshGrid();
+    }
+
+    function deleteColumn() {
+        var del_index = $("#delete_col").val();
+        if (-1 == del_index) {
+            alert("请选择删除的列");
+            return;
+        }
+        var search_index = 0;
+        $.each(jqColName, function (index, value) {
+            //console.log(value);
+            //console.log("search_index="+search_index);
+            //console.log("del_index="+del_index);
+            if (search_index == del_index) {
+                if (value[1]) {
+                    var val = confirm("确定要删除 \"" + value + "\" 吗?");
+                    if (val) {
+                        jqColName.splice(index, 1);
+                        refreshDeleteList();
+                        refreshGrid();
+                    }
+                    return false;
+                } else {
+                    //console.log("Delete col "+search_index);
+                    jqColName.splice(index, 1);
+                    refreshDeleteList();
+                    refreshGrid();
+                    return false;
+                }
+            }
+            search_index += 1;
+            if (value[1]) {
+                if (del_index < value[1].length + search_index) {
+                    //var i=del_index-search_index;
+                    // remove column
+                    value[1].splice(del_index - search_index, 1);
+                    if (0 == value[1].length) {
+                        // console.log(value[1]);
+                        value.pop();
+                    }
+                    refreshDeleteList();
+                    refreshGrid();
+                    // console.log("Delete col "+index+"["+i+"]");
+                    return false; // break
+                } else {
+                    search_index += value[1].length;
+                }
+            }
+        })
+    }
+
+    function getParams() {
+        var model = [];
+        var names = [];
+        var jqGroups = [];
+        $.each(jqColName, function (index, value) {
+            if (value[1]) {
+                jqGroups.push({
+                    "startColumnName": value[0] + '_' + value[1][0],
+                    "numberOfColumns": value[1].length,
+                    "titleText": value[0]
+                });
+                $.each(value[1], function (i, val) {
+                    model.push({
+                        name: value[0] + '_' + val,
+                        width: 100,
+                        editable: true
+                    });
+                    names.push(val);
+                })
+            } else {
+                model.push({
+                    name: value[0],
+                    width: 100,
+                    editable: true
+                });
+                names.push(value[0]);
+            }
+            ;
+        });
+        return [model, names, jqGroups];
+    }
+
+    function refreshGrid() { // 动态更新列
+        var [model, names, jqGroups] = getParams();
+        var params = {
+            datatype: "local",//请求数据返回的类型。可选json,xml,txt
+            colNames: names,//jqGrid的列显示名字
+            colModel: model,
+            rowNum: 100,//一页显示多少条
+            rowList: [100, 200, 300],//可供用户选择一页显示多少条
+            pager: '#pager2',//表格页脚的占位符(一般是div)的id
+            sortname: 'id',//初始化的时候排序的字段
+            sortorder: "desc",//排序方式,可选desc,asc
+            viewrecords: true,
+            cellEdit: true, // 单元格可编辑
+            cellsubmit: 'clientArray' // 使用本地数据保存
+        };
+        params['afterSaveCell'] = function (rowed, cellname, value, iRow, iCol) {
+            //console.log(rowed);//console.log(cellname);console.log(value);console.log(iRow);console.log(iCol);
+            //console.log(jqdata[rowed-1]);
+            jqdata[rowed - 1][cellname] = value;
+            //console.log("Refreshing data...");
+            var [model, names] = getParams();
+            params.colNames = names;
+            params.colModel = model;
+            jQuery("#jqgrid").GridUnload();
+            refreshGrid();
+            console.log(jqdata);
+        }
+        //创建jqGrid组件
+        jQuery("#jqgrid").GridUnload();
+        jQuery("#jqgrid").jqGrid(params);
+        jQuery("#jqgrid").jqGrid("setGroupHeaders", { // 合并表头
+            useColSpanStyle: true,
+            groupHeaders: jqGroups
+        });
+        for (var i = 0; i <= jqdata.length; i++) {
+            jQuery("#jqgrid").jqGrid('addRowData', i + 1, jqdata[i]);
+        }
+    }
+
+    initSelect();
+    refreshGrid();
+    refreshDeleteList();
+</script>

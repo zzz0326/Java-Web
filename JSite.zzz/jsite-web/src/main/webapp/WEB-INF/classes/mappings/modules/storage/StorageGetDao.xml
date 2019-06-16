@@ -1,0 +1,132 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jsite.modules.storage.dao.StorageGetDao">
+    
+	<sql id="storageGetColumns">
+		a.id AS "id",
+		a.proc_ins_id AS "procInsId",
+		a.start_time AS "startTime",
+		a.end_time AS "endTime",
+		a.leave_type AS "leaveType",
+		a.apply_time AS "applyTime",
+		a.create_by AS "createBy.id",
+		a.create_date AS "createDate",
+		a.update_by AS "updateBy.id",
+		a.update_date AS "updateDate",
+		a.remarks AS "remarks",
+		a.del_flag AS "delFlag",
+		a.warehouse_id AS "warehouseId",
+		a.carho_id AS "carhoId",
+		a.left_num AS "leftNum",
+		a.request_num AS "requestNum"
+	</sql>
+	
+	<sql id="storageGetJoins">
+	</sql>
+    
+	<select id="get" resultType="StorageGet">
+		SELECT 
+			<include refid="storageGetColumns"/>
+		FROM storage_get a
+		<include refid="storageGetJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="StorageGet">
+		SELECT 
+			<include refid="storageGetColumns"/>
+		FROM storage_get a
+		<include refid="storageGetJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="StorageGet">
+		SELECT 
+			<include refid="storageGetColumns"/>
+		FROM storage_get a
+		<include refid="storageGetJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO storage_get(
+			id,
+			proc_ins_id,
+			start_time,
+			end_time,
+			leave_type,
+			apply_time,
+			create_by,
+			create_date,
+			update_by,
+			update_date,
+			remarks,
+			del_flag,
+			warehouse_id,
+			carho_id,
+			left_num,
+			request_num
+		) VALUES (
+			#{id},
+			#{procInsId},
+			#{startTime},
+			#{endTime},
+			#{leaveType},
+			#{applyTime},
+			#{createBy.id},
+			#{createDate},
+			#{updateBy.id},
+			#{updateDate},
+			#{remarks},
+			#{delFlag},
+			#{warehouseId},
+			#{carhoId},
+			#{leftNum},
+			#{requestNum}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE storage_get SET 	
+			proc_ins_id = #{procInsId},
+			start_time = #{startTime},
+			end_time = #{endTime},
+			leave_type = #{leaveType},
+			apply_time = #{applyTime},
+			update_by = #{updateBy.id},
+			update_date = #{updateDate},
+			remarks = #{remarks},
+			warehouse_id = #{warehouseId},
+			carho_id = #{carhoId},
+			left_num = #{leftNum},
+			request_num = #{requestNum}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		UPDATE storage_get SET 
+			del_flag = #{DEL_FLAG_DELETE}
+		WHERE id = #{id}
+	</update>
+	
+</mapper>

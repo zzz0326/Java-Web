@@ -1,0 +1,231 @@
+<% layout('/layout/default.html', {title: '仓储申请', libs: ['validate','dataGrid']}){ %>
+<div class="main-content">
+    <div class="box box-main">
+        <div class="box-header">
+            <div class="box-title">
+                <i class="fa fa-pencil-square-o"></i> 仓储申请
+            </div>
+        </div>
+        <!--i通过action来给searchForm赋值 然后在js中进行调用-->
+        <!--name要和dao层中的name一致 才能够被调用-->
+        <!--这个form主要是为了给searchForm赋值的-->
+        <form id="searchForm" action="${ctx}/localstorage/storage/listData" method="post" class="form-inline hide" >
+            <div class="form-group">
+                <label class="control-label">仓库号：</label>
+                <div class="control-inline">
+                    <input name="warehouseId"  maxlength="64" class="form-control"/>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="control-label">货物号：</label>
+                <div class="control-inline">
+                    <input name="cargoId"  class="form-control"/>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="control-label">剩余：</label>
+                <div class="control-inline">
+                    <input name="remaining"  maxlength="64" class="form-control"/>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="control-label">需要量：</label>
+                <div class="control-inline">
+                    <input name="need"  maxlength="255" class="form-control"/>
+                </div>
+            </div>
+        </form>
+
+
+        <#form:form id="inputForm" model="${storageGet}" action="${ctx}/storage/storageGet/save" method="post" class="form-horizontal">
+        <div class="box-body">
+            <#form:hidden path="id"/>
+            <#form:hidden path="act.taskId" value="${storageGet.act.taskId}"/>
+            <#form:hidden path="act.taskName" value="${storageGet.act.taskName}"/>
+            <#form:hidden path="act.taskDefKey" value="${storageGet.act.taskDefKey}"/>
+            <#form:hidden path="act.procInsId" value="${storageGet.act.procInsId}"/>
+            <#form:hidden path="act.procDefId" value="${storageGet.act.procDefId}"/>
+            <#form:hidden id="flag" path="act.flag"/>
+
+
+
+
+            <table class="table-view">
+
+                <tr>
+                    <td class="tit"><span class="required hide">*</span>仓库编码<i class="fa icon-question hide"></i></td>
+                    <td>
+                        <#form:input path="warehouseId"  maxlength="11" class="form-control  "/>
+                    </td>
+
+                </tr>
+                <tr>
+
+                    <td class="tit">需要数量</td>
+                    <td>
+                        <#form:input path="requestNum"  maxlength="11" class="form-control  "/>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="tit">货物id</td>
+                    <td>
+                        <#form:input path="carhoId"  maxlength="11" class="form-control  "/>
+                    </td>
+                </tr>
+                <tr>
+
+                    <td class="tit">备注信息</td>
+                    <td>
+                        <#form:textarea path="remarks" rows="4"  maxlength="255" class="form-control input-xxlarge "/>
+                    </td>
+                </tr>
+                <tr>
+
+                    <td class="tit">余量</td>
+                    <td>
+                        <#form:input path="leftNum"  maxlength="11" class="form-control  "/>
+                    </td>
+                </tr>
+
+
+
+
+            </table>
+
+
+            <table id="dataGrid"></table>
+            <div id="dataGridPage"></div>
+
+
+        </div>
+
+
+        <div class="box-footer">
+            <div class="row">
+                <div class="col-sm-offset-2 col-sm-10">
+                    <% if (hasPermi('storage:storageGet:edit')){ %>
+                    <button type="submit" class="btn btn-sm btn-primary" id="btnSubmit" onclick="$('#flag').val('yes')" ><i class="fa fa-check"></i> 发起流程</button>
+
+                    <% if (!isEmpty(storageGet.id)){ %>
+                    <button type="submit" class="btn btn-sm btn-danger" id="btnSubmit" onclick="$('#flag').val('no')" ><i class="fa fa-check"></i> 结束流程</button>
+                    <% } %>
+
+                    <% } %>
+                    <button type="button" class="btn btn-sm btn-default" id="btnCancel" onclick="window.parent.closeCurrentTabPage();"><i class="fa fa-reply-all"></i> 关 闭</button>
+                </div>
+            </div>
+        </div>
+
+    </#form:form>
+    <#form:form id="createxcel" model="${storageGet}" action="${ctx}/storage/storageGet/creatExcle" method="post" class="form-horizontal">
+
+
+
+</#form:form>
+
+
+<% if (!isEmpty(storageGet.id)){ %>
+<#form:histoicFlow procInsId="${storageGet.act.procInsId}" isSubTag="false"/>
+<% } %>
+
+</div>
+</div>
+<% } %>
+
+
+<script type="text/javascript">
+	$("#inputForm").validate({
+		submitHandler: function(form){
+			js.ajaxSubmitForm($(form), function(data){
+				js.showMessage(data.message);
+				if(data.result == 'true'){
+					window.parent.closeCurrentTabPage(window.parent.refreshTab);
+				}
+			});
+	    }
+	});
+</script>
+
+<script>
+	function checkBeforeUpload(obj){
+		js.layer.open({
+			type: 2,
+			area: ['65%', '50%'],
+
+			fixed: true, //不固定
+			maxmin: true,
+			title:'文件上传',
+			content: ['${ctx}/oa_forms/oaFormsUploadProcess/uploadFile', 'auto'],
+			end:function(){
+				dataGrid.refresh();
+			}
+		});
+	}
+
+
+
+    var lastsel = -1;
+
+	//初始化DataGrid对象
+	$('#dataGrid').dataGrid({
+
+		searchForm: $("#searchForm"),
+		columnModel: [
+			{header:'仓库号', name:'warehouseId', index:'a.warehouse_id', width:90, align:"center",editable : false},
+			{header:'货物号', name:'cargoId', index:'a.cargo_id', width:90, align:"center",editable : false},
+			{header:'余量', name:'remaining', index:'a.remaining', width:90, align:"center",editable : false},
+			{header:'需要量', name:'need', index:'a.need', width:90, align:"center",editable : true,edittype : "number"}
+		],
+
+        onSelectRow : function(rowid, status) {
+            if (rowid && rowid !== lastsel) {
+            	if(lastsel !== -1) {
+					var temp = $('#need1').val();
+                    var rowData = $('#dataGrid').getRowData(rowid);
+                    $.post("${ctx}/localstorage/storage/saveNeed",
+                        {
+                            id:lastsel,
+                            need:temp
+                        }
+                    );
+                    $.post("${ctx}/localstorage/storage/recoder",
+                        {
+                            warehouseId:rowData.warehouseId,
+                            cargoId:rowData.cargoId,
+                            need:temp
+                        }
+                    );
+					$('#dataGrid').setRowData(lastsel, {need: temp});
+				}
+            	var obj = $('#dataGrid').getCell(rowid,"need");
+                var varTemp = '<input id="need1" type="number" />';
+				$('#dataGrid').setRowData(rowid,{need:varTemp});
+                $('#need1').val(obj);
+				lastsel = rowid;
+            }
+        },
+
+
+		// 加载成功后执行事件
+		ajaxSuccess: function(data){
+
+		}
+
+	});
+
+    $(function() {
+        $('#dataGrid').dataGrid('navGrid', "#dataGridPage", {
+            edit : false,
+            add : false,
+            del : false
+    })
+    });
+
+
+
+
+
+
+
+
+</script>

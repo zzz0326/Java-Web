@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jsite.modules.friend_link.dao.TCmsFriendlinkDao">
+    
+	<sql id="tCmsFriendlinkColumns">
+				a.id AS "id",
+		a.link_name AS "linkName",
+		a.link_type AS "linkType",
+		a.img AS "img",
+		a.link_url AS "linkUrl",
+		a.sort_id AS "sortId",
+		a.status AS "status",
+		a.group_id AS "groupId"
+	</sql>
+	
+	<sql id="tCmsFriendlinkJoins">
+	</sql>
+    
+	<select id="get" resultType="TCmsFriendlink">
+		SELECT 
+			<include refid="tCmsFriendlinkColumns"/>
+		FROM t_cms_friendlink a
+		<include refid="tCmsFriendlinkJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="TCmsFriendlink">
+		SELECT 
+			<include refid="tCmsFriendlinkColumns"/>
+		FROM t_cms_friendlink a
+		<include refid="tCmsFriendlinkJoins"/>
+		<where>
+			
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="TCmsFriendlink">
+		SELECT 
+			<include refid="tCmsFriendlinkColumns"/>
+		FROM t_cms_friendlink a
+		<include refid="tCmsFriendlinkJoins"/>
+		<where>
+			
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO t_cms_friendlink(
+			link_name,
+			link_type,
+			img,
+			link_url,
+			sort_id,
+			status,
+			group_id
+		) VALUES (
+			#{linkName},
+			#{linkType},
+			#{img},
+			#{linkUrl},
+			#{sortId},
+			#{status},
+			#{groupId}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE t_cms_friendlink SET 	
+			link_name = #{linkName},
+			link_type = #{linkType},
+			img = #{img},
+			link_url = #{linkUrl},
+			sort_id = #{sortId},
+			status = #{status},
+			group_id = #{groupId}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		DELETE FROM t_cms_friendlink
+		WHERE id = #{id}
+	</update>
+	
+</mapper>

@@ -1,0 +1,71 @@
+<% layout('/layout/default.html', {title: '出入库流水账', libs: ['dataGrid']}){ %>
+<div class="main-content">
+	<div class="box box-main">
+		<div class="box-header">
+			<div class="box-title">
+				<i class="fa fa-cubes"></i> 出入库流水账
+			</div>
+			<div class="box-tools pull-right">
+				<a href="#" class="btn btn-default" id="btnSearch" title="查询"><i class="fa fa-filter"></i> 查询</a>
+			</div>
+		</div>
+		<div class="box-body">
+			<form id="searchForm" action="${ctx}/storage_diary/storageDiary/listData" method="post" class="form-inline hide" >
+			</form>
+			<table id="dataGrid"></table>
+			<div id="dataGridPage"></div>
+		</div>
+	</div>
+</div>
+<% } %>
+<script>
+	//初始化DataGrid对象
+	$('#dataGrid').dataGrid({
+		searchForm: $("#searchForm"),
+		columnModel: [
+
+			{header:'日期', name:'data', index:'a.data', width:90, align:"center", frozen: true},
+			{header:'单据类型', name:'docType', index:'a.docType', width:90, align:"center"},
+			{header:'单据号', name:'douNum', index:'a.douNum', width:90, align:"center"},
+			{header:'仓库', name:'warehouse', index:'a.warehouse', width:90, align:"center"},
+			{header:'收发类型', name:'transerType', index:'a.transerType', width:90, align:"center"},
+			{header:'部门', name:'department', index:'a.department', width:90, align:"center"},
+			{header:'业务员', name:'employ', index:'a.employ', width:90, align:"center"},
+			{header:'供货单位', name:'suppliers', index:'a.suppliers', width:90, align:"center"},
+			{header:'客户', name:'custom', index:'a.custom', width:90, align:"center"},
+			{header:'备注', name:'notes', index:'a.notes', width:90, align:"center"},
+			{header:'制单人', name:'docMaker', index:'a.docMaker', width:90, align:"center"},
+			{header:'审核人', name:'audit', index:'a.audit', width:90, align:"center"},
+			{header:'审核日期', name:'auditData', index:'a.auditData', width:90, align:"center"},
+			{header:'记账人', name:'accounter', index:'a.accounter', width:90, align:"center"},
+			{header:'存货编码', name:'stockCode', index:'a.stockCode', width:90, align:"center"},
+			{header:'存货代码', name:'stockId', index:'a.stockId', width:90, align:"center"},
+			{header:'存货名称', name:'stockName', index:'a.stockName', width:90, align:"center"},
+			{header:'规格型号', name:'model', index:'a.model', width:90, align:"center"},
+			{header:'主计量单位', name:'mainMeas', index:'a.mainMeas', width:90, align:"center"},
+			{header:'入库数量', name:'inNum', index:'a.inNum', width:90, align:"center"},
+			{header:'入库单价', name:'inSinglePrice', index:'a.inSinglePrice', width:90, align:"center"},
+			{header:'入库金额', name:'inPrice', index:'a.inPrice', width:90, align:"center"},
+			{header:'出库数量', name:'outNum', index:'a.outNum', width:90, align:"center"},
+			{header:'出库单价', name:'outSinglePrice', index:'a.outSinglePrice', width:90, align:"center"},
+			{header:'出库金额', name:'outPrice', index:'a.outPrice', width:90, align:"center"},
+			{header:'存货分类编号', name:'stockClassId', index:'a.stockClassId', width:90, align:"center"},
+			{header:'失效日期', name:'outDate', index:'a.outDate', width:90, align:"center"},
+			{header:'存货分类名称', name:'stockClassName', index:'a.stockClassName', width:90, align:"center"},
+			{header:'销售订单类别', name:'orderClass', index:'a.orderClass', width:90, align:"center"}
+
+
+
+		],
+		autoScroll: false,
+		shrinkToFit: false,
+
+
+		// 加载成功后执行事件
+		ajaxSuccess: function(data){
+			$('#dataGrid').dataGrid('setFrozenColumns');
+		}
+	});
+
+
+</script>

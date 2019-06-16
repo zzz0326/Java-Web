@@ -1,0 +1,121 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jsite.modules.article.dao.TArticleDao">
+    
+	<sql id="tArticleColumns">
+				a.id AS "id",
+		a.category_id AS "categoryId",
+		a.title AS "title",
+		a.content AS "content",
+		a.image AS "image",
+		a.keywords AS "keywords",
+		a.createtime AS "createtime",
+		a.hit AS "hit",
+		a.description AS "description",
+		a.orders AS "orders",
+		a.status AS "status",
+		a.author AS "author"
+	</sql>
+	
+	<sql id="tArticleJoins">
+	</sql>
+    
+	<select id="get" resultType="TArticle">
+		SELECT 
+			<include refid="tArticleColumns"/>
+		FROM t_article a
+		<include refid="tArticleJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="TArticle">
+		SELECT 
+			<include refid="tArticleColumns"/>
+		FROM t_article a
+		<include refid="tArticleJoins"/>
+		<where>
+			
+			<if test="title != null and title != ''">
+				AND a.title LIKE 
+					<if test="dbName == 'oracle'">'%'||#{title}||'%'</if>
+					<if test="dbName == 'mssql'">'%'+#{title}+'%'</if>
+					<if test="dbName == 'mysql'">concat('%',#{title},'%')</if>
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.createtime DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="TArticle">
+		SELECT 
+			<include refid="tArticleColumns"/>
+		FROM t_article a
+		<include refid="tArticleJoins"/>
+		<where>
+			
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.createtime ASC
+							</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO t_article(
+		    id,
+			category_id,
+			title,
+			content,
+			image,
+			keywords,
+			createtime,
+			description,
+			orders,
+			status,
+			author
+		) VALUES (
+		#{id},
+			#{categoryId},
+			#{title},
+			#{content},
+			#{image},
+			#{keywords},
+			#{createtime},
+			#{description},
+			#{orders},
+			#{status},
+			#{author}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE t_article SET 	
+			category_id = #{categoryId},
+			title = #{title},
+			content = #{content},
+			image = #{image},
+			keywords = #{keywords},
+			createtime = #{createtime},
+			description = #{description},
+			orders = #{orders},
+			status = #{status},
+			author = #{author}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		DELETE FROM t_article
+		WHERE id = #{id}
+	</update>
+	
+</mapper>

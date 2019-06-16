@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<Info>
+  <User grade="980886">
+    <name>小明</name>
+    <sex>男</sex>
+    <email>123@163.com</email>
+  </User>
+  <User grade="980886">
+    <name>李建</name>
+    <sex>女</sex>
+    <email>455i@163.com</email>
+  </User>
+  <User grade="980666">
+    <name>张天虎</name>
+    <sex>男</sex>
+    <email>789@163.com</email>
+  </User>
+  <User grade="980666">
+    <name>陈小燕</name>
+    <sex>女</sex>
+    <email>453@163.com</email>
+  </User>
+</Info>

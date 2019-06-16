@@ -1,0 +1,99 @@
+<% layout('/layout/default.html', {title: '关联查询详情', libs: ['validate', 'icheck']}){ %>
+<div class="main-content">
+	<div class="box box-main">
+		<div class="box-header with-border">
+			<div class="box-title">
+				<i class="fa fa-pencil-square-o"></i> ${supplyInf.isNewRecord?'新增关联查询':'编辑关联查询'}
+			</div>
+			<div class="box-tools pull-right">
+				<button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i></button>
+			</div>
+		</div>
+		<#form:form id="inputForm" model="${supplyInf}" action="${ctx}/supply/supplyInf/save" method="post" class="form-horizontal">
+			<div class="box-body">
+				<#form:hidden path="id"/>
+				<div class="row">
+					<div class="col-xs-6">
+						<div class="form-group">
+							<label class="control-label col-sm-4" title="">
+							<span class="required hide">*</span> supplier：<i class="fa icon-question hide"></i>
+							</label>
+							<div class="col-sm-8">
+								<#form:input path="supplier"  maxlength="20" class="form-control required  "/>
+							</div>
+						</div>
+					</div>
+					<div class="col-xs-6">
+						<div class="form-group">
+							<label class="control-label col-sm-4" title="">
+							 product：
+							</label>
+							<div class="col-sm-8">
+								<#form:input path="product"  maxlength="255" class="form-control  "/>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="row">
+					<div class="col-xs-6">
+						<div class="form-group">
+							<label class="control-label col-sm-4" title="">
+							 address：
+							</label>
+							<div class="col-sm-8">
+								<#form:input path="address"  maxlength="255" class="form-control  "/>
+							</div>
+						</div>
+					</div>
+					<div class="col-xs-6">
+						<div class="form-group">
+							<label class="control-label col-sm-4" title="">
+							 principal：
+							</label>
+							<div class="col-sm-8">
+								<#form:input path="principal"  maxlength="5" class="form-control  "/>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="row">
+					<div class="col-xs-6">
+						<div class="form-group">
+							<label class="control-label col-sm-4" title="">
+							 phonenum：
+							</label>
+							<div class="col-sm-8">
+								<#form:input path="phonenum"  maxlength="20" class="form-control  "/>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			
+			<div class="box-footer">
+				<div class="row">
+					<div class="col-sm-offset-2 col-sm-10">
+						<% if (hasPermi('supply:supplyInf:edit')){ %>
+							<button type="submit" class="btn btn-sm btn-primary" id="btnSubmit"><i class="fa fa-check"></i> 保 存</button>
+						<% } %>
+						<button type="button" class="btn btn-sm btn-default" id="btnCancel" onclick="window.parent.closeCurrentTabPage()"><i class="fa fa-reply-all"></i> 关 闭</button>
+					</div>
+				</div>
+			</div>
+		</#form:form>
+	</div>
+</div>
+<% } %>
+
+<script type="text/javascript">
+	$("#inputForm").validate({
+		submitHandler: function(form){
+			js.ajaxSubmitForm($(form), function(data){
+				js.showMessage(data.message);
+				if(data.result == 'true'){
+					window.parent.closeCurrentTabPage(window.parent.refreshTab);
+				}
+			});
+	    }
+	});
+</script>

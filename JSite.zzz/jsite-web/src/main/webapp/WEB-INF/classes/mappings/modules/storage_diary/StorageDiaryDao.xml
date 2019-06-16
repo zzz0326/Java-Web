@@ -1,0 +1,185 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jsite.modules.storage_diary.dao.StorageDiaryDao">
+    
+	<sql id="storageDiaryColumns">
+				a.data AS "data",
+		a.doc_type AS "docType",
+		a.dou_num AS "douNum",
+		a.warehouse AS "warehouse",
+		a.transer_type AS "transerType",
+		a.department AS "department",
+		a.employ AS "employ",
+		a.suppliers AS "suppliers",
+		a.custom AS "custom",
+		a.notes AS "notes",
+		a.doc_maker AS "docMaker",
+		a.audit AS "audit",
+		a.audit_data AS "auditData",
+		a.accounter AS "accounter",
+		a.stock_code AS "stockCode",
+		a.stock_id AS "stockId",
+		a.stock_name AS "stockName",
+		a.model AS "model",
+		a.main_meas AS "mainMeas",
+		a.in_num AS "inNum",
+		a.in_price AS "inPrice",
+		a.in_single_price AS "inSinglePrice",
+		a.out_num AS "outNum",
+		a.out_price AS "outPrice",
+		a.stock_class_id AS "stockClassId",
+		a.out_single_price AS "outSinglePrice",
+		a.out_date AS "outDate",
+		a.stock_class_name AS "stockClassName",
+		a.order_class AS "orderClass"
+	</sql>
+	
+	<sql id="storageDiaryJoins">
+	</sql>
+    
+	<select id="get" resultType="StorageDiary">
+		SELECT 
+			<include refid="storageDiaryColumns"/>
+		FROM storage_diary a
+		<include refid="storageDiaryJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="StorageDiary">
+		SELECT 
+			<include refid="storageDiaryColumns"/>
+		FROM storage_diary a
+		<include refid="storageDiaryJoins"/>
+		<where>
+			
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="StorageDiary">
+		SELECT 
+			<include refid="storageDiaryColumns"/>
+		FROM storage_diary a
+		<include refid="storageDiaryJoins"/>
+		<where>
+			
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO storage_diary(
+			data,
+			doc_type,
+			dou_num,
+			warehouse,
+			transer_type,
+			department,
+			employ,
+			suppliers,
+			custom,
+			notes,
+			doc_maker,
+			audit,
+			audit_data,
+			accounter,
+			stock_code,
+			stock_id,
+			stock_name,
+			model,
+			main_meas,
+			in_num,
+			in_price,
+			in_single_price,
+			out_num,
+			out_price,
+			stock_class_id,
+			out_single_price,
+			out_date,
+			stock_class_name,
+			order_class
+		) VALUES (
+			#{data},
+			#{docType},
+			#{douNum},
+			#{warehouse},
+			#{transerType},
+			#{department},
+			#{employ},
+			#{suppliers},
+			#{custom},
+			#{notes},
+			#{docMaker},
+			#{audit},
+			#{auditData},
+			#{accounter},
+			#{stockCode},
+			#{stockId},
+			#{stockName},
+			#{model},
+			#{mainMeas},
+			#{inNum},
+			#{inPrice},
+			#{inSinglePrice},
+			#{outNum},
+			#{outPrice},
+			#{stockClassId},
+			#{outSinglePrice},
+			#{outDate},
+			#{stockClassName},
+			#{orderClass}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE storage_diary SET 	
+			data = #{data},
+			doc_type = #{docType},
+			dou_num = #{douNum},
+			warehouse = #{warehouse},
+			transer_type = #{transerType},
+			department = #{department},
+			employ = #{employ},
+			suppliers = #{suppliers},
+			custom = #{custom},
+			notes = #{notes},
+			doc_maker = #{docMaker},
+			audit = #{audit},
+			audit_data = #{auditData},
+			accounter = #{accounter},
+			stock_code = #{stockCode},
+			stock_id = #{stockId},
+			stock_name = #{stockName},
+			model = #{model},
+			main_meas = #{mainMeas},
+			in_num = #{inNum},
+			in_price = #{inPrice},
+			in_single_price = #{inSinglePrice},
+			out_num = #{outNum},
+			out_price = #{outPrice},
+			stock_class_id = #{stockClassId},
+			out_single_price = #{outSinglePrice},
+			out_date = #{outDate},
+			stock_class_name = #{stockClassName},
+			order_class = #{orderClass}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		DELETE FROM storage_diary
+		WHERE id = #{id}
+	</update>
+	
+</mapper>

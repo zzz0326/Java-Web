@@ -1,0 +1,82 @@
+<% layout('/layout/default.html', {title: '仓储申请', libs: ['']}){ %>
+<div class="main-content">
+	<div class="box box-main">
+		<div class="box-header">
+			<div class="box-title">
+				<i class="fa fa-pencil-square-o"></i> 仓储申请详情
+			</div>
+		</div>
+		<#form:form id="inputForm" model="${storageGet}" action="#" method="post" class="form-horizontal">
+			<div class="box-body">
+
+
+				<table class="table-view">
+					<tr>
+                        <td>流程实例编号</td>
+                        <td>
+                            ${storageGet.procInsId}
+                        </td>
+                        <td>开始时间</td>
+                        <td>
+                            ${storageGet.startTime}
+                        </td>
+					</tr>
+					<tr>
+                        <td>结束时间</td>
+                        <td>
+                            ${storageGet.endTime}
+                        </td>
+                        <td>请假类型</td>
+                        <td>
+                            ${storageGet.leaveType}
+                        </td>
+					</tr>
+					<tr>
+                        <td>申请时间</td>
+                        <td>
+                            ${storageGet.applyTime}
+                        </td>
+                        <td>备注信息</td>
+                        <td>
+                            ${storageGet.remarks}
+                        </td>
+					</tr>
+					<tr>
+                        <td>warehouse_id</td>
+                        <td>
+                            ${storageGet.warehouseId}
+                        </td>
+                        <td>carho_id</td>
+                        <td>
+                            ${storageGet.carhoId}
+                        </td>
+					</tr>
+					<tr>
+                        <td>left_num</td>
+                        <td>
+                            ${storageGet.leftNum}
+                        </td>
+                        <td>request_num</td>
+                        <td>
+                            ${storageGet.requestNum}
+                        </td>
+					</tr>
+
+				</table>
+			</div>
+
+			<div class="box-footer">
+				<div class="row">
+					<div class="col-sm-offset-1 col-sm-11">
+						<button type="button" class="btn btn-sm btn-default" id="btnCancel" onclick="window.parent.closeCurrentTabPage();"><i class="fa fa-reply-all"></i> 关 闭</button>
+					</div>
+				</div>
+			</div>
+
+		</#form:form>
+
+		<#form:histoicFlow procInsId="${storageGet.act.procInsId}" isSubTag="false"/>
+
+	</div>
+</div>
+<% } %>

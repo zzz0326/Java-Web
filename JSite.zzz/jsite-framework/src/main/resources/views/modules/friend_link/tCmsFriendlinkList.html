@@ -1,0 +1,52 @@
+<% layout('/layout/default.html', {title: '友情链接', libs: ['dataGrid']}){ %>
+<div class="main-content">
+	<div class="box box-main">
+		<div class="box-header">
+			<div class="box-title">
+				<i class="fa fa-cubes"></i> 友情链接
+			</div>
+			<div class="box-tools pull-right">
+				<a href="#" class="btn btn-default" id="btnSearch" title="查询"><i class="fa fa-filter"></i> 查询</a>
+				<% if(hasPermi('friend_link:tCmsFriendlink:edit')){ %>
+					<a href="/friend_link/tCmsFriendlink/form" class="btn btn-default btnTool"  title="新增友情链接"><i class="fa fa-plus"></i> 新增</a>
+				<% } %>
+			</div>
+		</div>
+		<div class="box-body">
+			<form id="searchForm" action="${ctx}/friend_link/tCmsFriendlink/listData" method="post" class="form-inline hide" >
+				
+				<div class="form-group">
+					<button type="submit" class="btn btn-primary btn-sm">查询</button>
+					<button type="reset" class="btn btn-default btn-sm">重置</button>
+				</div>
+			</form>			
+			<table id="dataGrid"></table>
+			<div id="dataGridPage"></div>
+		</div>
+	</div>
+</div>
+<% } %>
+<script>
+//初始化DataGrid对象
+$('#dataGrid').dataGrid({
+	searchForm: $("#searchForm"),
+	columnModel: [
+		{header:'标题', name:'linkName', index:'a.link_name', width:90, align:"left"},
+		{header:'地址', name:'linkUrl', index:'a.link_url', width:90, align:"center"},
+		{header:'操作', name:'actions', width:100, sortable:false, title:false, align:"center",formatter: function(val, obj, row, act){
+			var actions = [];
+			<% if(hasPermi('friend_link:tCmsFriendlink:edit')){ %>
+				actions.push('<a href="/friend_link/tCmsFriendlink/form?id='+row.id+'" class="btnList" title="编辑友情链接"><i class="fa fa-pencil"></i></a>&nbsp;');
+				actions.push('<a href="${ctx}/friend_link/tCmsFriendlink/delete?id='+row.id+'" class="btnList" title="删除友情链接" data-confirm="确认要删除该友情链接吗？"><i class="fa fa-trash-o"></i></a>&nbsp;');
+			<% } %>
+			
+			return actions.join('');
+		}}
+	],
+	// 加载成功后执行事件
+	ajaxSuccess: function(data){
+		
+	}
+});
+
+</script>

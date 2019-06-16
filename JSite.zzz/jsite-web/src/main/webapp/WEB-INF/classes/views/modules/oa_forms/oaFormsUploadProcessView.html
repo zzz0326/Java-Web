@@ -1,0 +1,48 @@
+<% layout('/layout/default.html', {title: '报表流程', libs: ['']}){ %>
+<div class="main-content">
+	<div class="box box-main">
+		<div class="box-header">
+			<div class="box-title">
+				<i class="fa fa-pencil-square-o"></i> 报表流程详情
+			</div>
+		</div>
+		<#form:form id="inputForm" model="${oaFormsUploadProcess}" action="#" method="post" class="form-horizontal">
+			<div class="box-body">
+
+
+				<table class="table-view">
+					<tr>
+                        <td>流程实例编号</td>
+                        <td>
+                            ${oaFormsUploadProcess.procInsId}
+                        </td>
+                        <td>开始时间</td>
+                        <td>
+                            ${oaFormsUploadProcess.startTime}
+                        </td>
+					</tr>
+					<tr>
+                        <td>备注信息</td>
+                        <td>
+                            ${oaFormsUploadProcess.remarks}
+                        </td>
+				</tr>
+
+				</table>
+			</div>
+
+			<div class="box-footer">
+				<div class="row">
+					<div class="col-sm-offset-1 col-sm-11">
+						<button type="button" class="btn btn-sm btn-default" id="btnCancel" onclick="window.parent.closeCurrentTabPage();"><i class="fa fa-reply-all"></i> 关 闭</button>
+					</div>
+				</div>
+			</div>
+
+		</#form:form>
+
+		<#form:histoicFlow procInsId="${oaFormsUploadProcess.act.procInsId}" isSubTag="false"/>
+
+	</div>
+</div>
+<% } %>

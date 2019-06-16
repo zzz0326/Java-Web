@@ -1,0 +1,88 @@
+<% layout('/layout/default.html', {title: '报表信息详情', libs: ['validate', 'icheck']}){ %>
+<div class="main-content">
+	<div class="box box-main">
+		<div class="box-header with-border">
+			<div class="box-title">
+				<i class="fa fa-pencil-square-o"></i> ${formsList.isNewRecord?'新增报表信息':'编辑报表信息'}
+			</div>
+			<div class="box-tools pull-right">
+				<button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i></button>
+			</div>
+		</div>
+		<#form:form id="inputForm" model="${formsList}" action="${ctx}/oa_forms/formsList/save" method="post" class="form-horizontal">
+			<div class="box-body">
+				<#form:hidden path="id"/>
+				<div class="row">
+					<div class="col-xs-6">
+						<div class="form-group">
+							<label class="control-label col-sm-4" title="">
+							<span class="required hide">*</span> 报表名：<i class="fa icon-question hide"></i>
+							</label>
+							<div class="col-sm-8">
+								<#form:input path="name"  maxlength="64" class="form-control required  "/>
+							</div>
+						</div>
+					</div>
+					<div class="col-xs-6">
+						<div class="form-group">
+							<label class="control-label col-sm-4" title="">
+							<span class="required hide">*</span> 创建时间：<i class="fa icon-question hide"></i>
+							</label>
+							<div class="col-sm-8">
+								<#form:input path="createdate"  class="form-control required  "/>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="row">
+					<div class="col-xs-6">
+						<div class="form-group">
+							<label class="control-label col-sm-4" title="">
+							<span class="required hide">*</span> 创建者：<i class="fa icon-question hide"></i>
+							</label>
+							<div class="col-sm-8">
+								<#form:input path="creator"  maxlength="64" class="form-control required  "/>
+							</div>
+						</div>
+					</div>
+					<div class="col-xs-6">
+						<div class="form-group">
+							<label class="control-label col-sm-4" title="">
+							 备注：
+							</label>
+							<div class="col-sm-8">
+								<#form:input path="remark"  maxlength="255" class="form-control  "/>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			
+			<div class="box-footer">
+				<div class="row">
+					<div class="col-sm-offset-2 col-sm-10">
+						<% if (hasPermi('oa_forms:formsList:edit')){ %>
+							<button type="submit" class="btn btn-sm btn-primary" id="btnSubmit"><i class="fa fa-check"></i> 保 存</button>
+						<% } %>
+						<button type="button" class="btn btn-sm btn-default" id="btnCancel" onclick="window.parent.closeCurrentTabPage()"><i class="fa fa-reply-all"></i> 关 闭</button>
+					</div>
+				</div>
+			</div>
+
+		</#form:form>
+	</div>
+</div>
+<% } %>
+
+<script type="text/javascript">
+	$("#inputForm").validate({
+		submitHandler: function(form){
+			js.ajaxSubmitForm($(form), function(data){
+				js.showMessage(data.message);
+				if(data.result == 'true'){
+					window.parent.closeCurrentTabPage(window.parent.refreshTab);
+				}
+			});
+	    }
+	});
+</script>

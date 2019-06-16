@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jsite.modules.storage_now.dao.StorageNowDao">
+    
+	<sql id="storageNowColumns">
+				a.warehouse_id AS "warehouseId",
+		a.stock_id AS "stockId",
+		a.stock_exit AS "stockExit",
+		a.exit_number AS "exitNumber",
+		a.useable AS "useable",
+		a.useable_number AS "useableNumber"
+	</sql>
+	
+	<sql id="storageNowJoins">
+	</sql>
+    
+	<select id="get" resultType="StorageNow">
+		SELECT 
+			<include refid="storageNowColumns"/>
+		FROM storage_now a
+		<include refid="storageNowJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="StorageNow">
+		SELECT 
+			<include refid="storageNowColumns"/>
+		FROM storage_now a
+		<include refid="storageNowJoins"/>
+		<where>
+			
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="StorageNow">
+		SELECT 
+			<include refid="storageNowColumns"/>
+		FROM storage_now a
+		<include refid="storageNowJoins"/>
+		<where>
+			
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO storage_now(
+			warehouse_id,
+			stock_id,
+			stock_exit,
+			exit_number,
+			useable,
+			useable_number
+		) VALUES (
+			#{warehouseId},
+			#{stockId},
+			#{stockExit},
+			#{exitNumber},
+			#{useable},
+			#{useableNumber}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE storage_now SET 	
+			warehouse_id = #{warehouseId},
+			stock_id = #{stockId},
+			stock_exit = #{stockExit},
+			exit_number = #{exitNumber},
+			useable = #{useable},
+			useable_number = #{useableNumber}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		DELETE FROM storage_now
+		WHERE id = #{id}
+	</update>
+	
+</mapper>

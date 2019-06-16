@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jsite.modules.oa_forms.dao.FormsListDao">
+    
+	<sql id="formsListColumns">
+		a.id AS "id",
+		if (a.type='DATFM',dtf.name,a.name) AS "name",
+		a.type AS "type",
+		a.createdate AS "createdate",
+		su.name AS "creator",
+		if (a.type='DATFM',dtf.remark,a.remark) AS "remark"
+	</sql>
+	
+	<sql id="formsListJoins">
+		INNER JOIN sys_user su ON a.creator = su.id
+		LEFT JOIN forms_dataform dtf ON a.id = dtf.id
+	</sql>
+    
+	<select id="get" resultType="FormsList">
+		SELECT 
+			<include refid="formsListColumns"/>
+		FROM forms_list a
+		<include refid="formsListJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="FormsList">
+		SELECT 
+			<include refid="formsListColumns"/>
+		FROM forms_list a
+		<include refid="formsListJoins"/>
+		<where>
+			
+			<if test="name != null and name != ''">
+				AND a.name LIKE 
+					<if test="dbName == 'oracle'">'%'||#{name}||'%'</if>
+					<if test="dbName == 'mssql'">'%'+#{name}+'%'</if>
+					<if test="dbName == 'mysql'">concat('%',#{name},'%')</if>
+			</if>
+			<if test="createdate != null and createdate != ''">
+				AND a.createdate = #{createdate}
+			</if>
+			<if test="creator != null and creator != ''">
+				AND a.creator = #{creator}
+			</if>
+			<if test="remark != null and remark != ''">
+				AND a.remark LIKE
+				<if test="dbName == 'oracle'">'%'||#{remark}||'%'</if>
+				<if test="dbName == 'mssql'">'%'+#{remark}+'%'</if>
+				<if test="dbName == 'mysql'">concat('%',#{remark},'%')</if>
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="FormsList">
+		SELECT 
+			<include refid="formsListColumns"/>
+		FROM forms_list a
+		<include refid="formsListJoins"/>
+		<where>
+			
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO forms_list(
+			id,
+			name,
+		    type,
+			createdate,
+			creator,
+			remark
+		) VALUES (
+			#{id},
+			#{name},
+		    #{type},
+			#{createdate},
+			#{creator},
+			#{remark}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE forms_list SET 	
+			name = #{name},
+			remark = #{remark}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		DELETE FROM forms_list
+		WHERE id = #{id}
+	</update>
+	
+</mapper>

@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jsite.modules.supply.dao.SupplyInfDao">
+    
+	<sql id="supplyInfColumns">
+				a.supplier AS "supplier",
+		a.product AS "product",
+		a.address AS "address",
+		a.principal AS "principal",
+		a.phonenum AS "phonenum"
+	</sql>
+	
+	<sql id="supplyInfJoins">
+	</sql>
+    
+	<select id="get" resultType="SupplyInf">
+		SELECT 
+			<include refid="supplyInfColumns"/>
+		FROM supply_inf a
+		<include refid="supplyInfJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="SupplyInf">
+		SELECT 
+			<include refid="supplyInfColumns"/>
+		FROM supply_inf a
+		<include refid="supplyInfJoins"/>
+		<where>
+
+		</where>
+		<if test="supplier != null and supplier != ''">
+			WHERE a.supplier = #{supplier}
+		</if>
+		<if test="product != null and product != ''">
+			WHERE a.product LIKE
+			<if test="dbName == 'oracle'">'%'||#{product}||'%'</if>
+			<if test="dbName == 'mssql'">'%'+#{product}+'%'</if>
+			<if test="dbName == 'mysql'">CONCAT('%', #{product}, '%')</if>
+		</if>
+		<choose>
+
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="SupplyInf">
+		SELECT 
+			<include refid="supplyInfColumns"/>
+		FROM supply_inf a
+		<include refid="supplyInfJoins"/>
+		<where>
+			
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+
+	<select id="findSupplierList" resultType="SupplyInf">
+		SELECT
+		       *
+		FROM supply_inf
+		ORDER BY supplier
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO supply_inf(
+			supplier,
+			product,
+			address,
+			principal,
+			phonenum
+		) VALUES (
+			#{supplier},
+			#{product},
+			#{address},
+			#{principal},
+			#{phonenum}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE supply_inf SET 	
+			supplier = #{supplier},
+			product = #{product},
+			address = #{address},
+			principal = #{principal},
+			phonenum = #{phonenum}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		DELETE FROM supply_inf
+		WHERE id = #{id}
+	</update>
+	
+</mapper>

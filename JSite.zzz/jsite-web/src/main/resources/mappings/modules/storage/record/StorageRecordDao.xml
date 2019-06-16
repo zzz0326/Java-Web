@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jsite.modules.storage.record.dao.StorageRecordDao">
+    
+	<sql id="storageRecordColumns">
+				a.id AS "id",
+		a.starttiem AS "starttiem",
+		a.warehouse_id AS "warehouseId",
+		a.cargo_id AS "cargoId",
+		a.need AS "need",
+		a.process_id AS "processId"
+	</sql>
+	
+	<sql id="storageRecordJoins">
+	</sql>
+    
+	<select id="get" resultType="StorageRecord">
+		SELECT 
+			<include refid="storageRecordColumns"/>
+		FROM storage_record a
+		<include refid="storageRecordJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="StorageRecord">
+		SELECT 
+			<include refid="storageRecordColumns"/>
+		FROM storage_record a
+		<include refid="storageRecordJoins"/>
+		<where>
+			
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="StorageRecord">
+		SELECT 
+			<include refid="storageRecordColumns"/>
+		FROM storage_record a
+		<include refid="storageRecordJoins"/>
+		<where>
+			
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO storage_record(
+			id,
+			starttiem,
+			warehouse_id,
+			cargo_id,
+			need,
+			process_id
+		) VALUES (
+			#{id},
+			#{starttiem},
+			#{warehouseId},
+			#{cargoId},
+			#{need},
+			#{processId}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE storage_record SET 	
+			starttiem = #{starttiem},
+			warehouse_id = #{warehouseId},
+			cargo_id = #{cargoId},
+			need = #{need},
+			process_id = #{processId}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		DELETE FROM storage_record
+		WHERE id = #{id}
+	</update>
+	
+</mapper>

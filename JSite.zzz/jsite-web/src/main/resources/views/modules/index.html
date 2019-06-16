@@ -1,0 +1,132 @@
+<% layout('/layout/default.html', {title: '首页', libs: ['dataGrid','validate', 'icheck']}){ %>
+
+
+
+<link href="${ctxStatic}/modules/front/main.css" rel="stylesheet" type="text/css">
+<link href="${ctxStatic}/modules/front/container.css" rel="stylesheet" type="text/css">
+<link href="${ctxStatic}/modules/front/reset.css" rel="stylesheet" type="text/css">
+<link href="${ctxStatic}/modules/front/screen.css" rel="stylesheet" type="text/css">
+<script src="${ctxStatic}/modules/front/tab.js"></script>
+<% include('/modules/nav.html'){} %>
+<% include('/modules/1.html'){} %>
+
+
+
+<div class="container">
+    <div class="left">
+        <div class="menu">
+            <div class="menu_title">
+                走进兴和
+                <br>
+                <span>Company profiles</span>
+            </div>
+            <ul id="tab">
+                <li class="active" onclick="changeValue(this)">
+                    <a href="javascript:void(0)">公司简介</a>
+                </li>
+                <li onclick="changeValue(this)">
+                    <a href="javascript:void(0)">发展历史</a>
+                </li>
+                <li onclick="changeValue(this)">
+                    <a href="javascript:void(0)">公司架构</a>
+                </li>
+            </ul>
+        </div>
+    </div>
+
+    <div class="right">
+        <div class="location">
+					<span>当前位置：<a
+                            href="#">走进兴和</a>
+					</span>
+            <div class="brief" id="b">
+                企业概况
+            </div>
+        </div>
+        <div style="font-size: 14px; margin-top: 53px; line-height: 36px;">
+            <div id="tab_con">
+                <div id="tab_con_1" class="active">
+                    <br>
+
+                    <img src="${ctxStatic}/modules/front/img/intro.jpg" alt="" style="margin: 2% 0;">
+
+                    <br>
+                </div>
+                <div id="tab_con_2" class="dis-n" style="text-align: center;">
+                    <p>                        明日科技将永葆创新激情，不断追求卓越，全力打造国内软件开发教育服务第一品牌，国内IT教育服务第一品牌，国内数字教育软件第一品牌和国内软件开发资源的最佳供应商，用实际行动迎接中国数字化产业的腾飞。
+                    </p>
+                    <img src="${ctxStatic}/modules/front/img/hs.jpg" alt="" style="margin: 2% 0;">
+                </div>
+                <div id="tab_con_3" class="dis-n" style="text-align: center;">
+                    <p>                        第3；栏国数字化产业的腾飞。
+                    </p>
+                    <img src="${ctxStatic}/modules/front/img/architecture.png" alt="" style="margin: 2% 0;">
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="main-content">
+    <div class="box box-main">
+        <div class="box-header">
+            <div class="box-title">
+                <i class="fa fa-cubes"></i> 新闻列表
+            </div>
+
+        </div>
+        <div class="box-body">
+            <form id="searchForm" action="${ctx}/index/listData" method="post" class="form-inline hide" >
+            </form>
+            <table id="dataGrid"></table>
+            <div id="dataGridPage"></div>
+        </div>
+
+    </div>
+</div>
+
+
+<% include('/modules/footer.html'){} %>
+
+<% } %>
+<!--底部-->
+<script>
+    tabs("#tab", "active", "#tab_con");
+</script>
+
+<script>
+    //初始化DataGrid对象
+    $('#dataGrid').dataGrid({
+        searchForm: $("#searchForm"),
+        columnModel: [
+            {header:'新闻', name:'title', index:'a.title', width:90, align:"left",formatter: function(val, obj, row, act){
+                    return '<a href="${ctx}/article/tArticle/form?id='+row.id+'"  class="btnList" title="流程图查看" data-type="diagram" >'+val+'</a>';
+                }
+            },
+    //        {header:'发布时间', name:'createtime', index:'a.createtime', width:90, align:"center"},
+            //   {header:'更新时间', name:'updateDate', index:'a.update_date', width:90, align:"center"},
+         //   {header:'', name:'remarks', index:'a.remarks', width:90, align:"center"},
+        ],
+        // 加载成功后执行事件
+        ajaxSuccess: function(data){
+
+        }
+    });
+
+</script>
+
+
+<script type="text/javascript">
+    $("#inputForm").validate({
+        submitHandler: function(form){
+            js.ajaxSubmitForm($(form), function(data){
+                js.showMessage(data.message);
+                if(data.result == 'true'){
+                    window.parent.closeCurrentTabPage(window.parent.refreshTab);
+                }
+            });
+        }
+    });
+
+</script>

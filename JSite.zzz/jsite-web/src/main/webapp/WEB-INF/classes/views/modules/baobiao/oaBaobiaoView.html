@@ -1,0 +1,78 @@
+<% layout('/layout/default.html', {title: '报表流程', libs: ['dataGrid']}){ %>
+<div class="main-content">
+	<div class="box box-main">
+		<div class="box-header">
+			<div class="box-title">
+				<i class="fa fa-pencil-square-o"></i> 报表流程详情
+			</div>
+		</div>
+		<#form:form id="inputForm" model="${oaBaobiao}" action="#" method="post" class="form-horizontal">
+			<div class="box-body">
+
+
+				<table class="table-view">
+					<tr>
+                        <td>流程实例编号</td>
+                        <td>
+                            ${oaBaobiao.procInsId}
+                        </td>
+                        <td>开始时间</td>
+                        <td>
+                            ${oaBaobiao.startTime}
+                        </td>
+					</tr>
+					<tr>
+                        <td>结束时间</td>
+                        <td>
+                            ${oaBaobiao.endTime}
+                        </td>
+                        <td>请假类型</td>
+                        <td>
+                            ${oaBaobiao.leaveType}
+                        </td>
+					</tr>
+					<tr>
+                        <td>请假理由</td>
+                        <td>
+                            ${oaBaobiao.reason}
+                        </td>
+                        <td>dept_lead_text</td>
+                        <td>
+                            ${oaBaobiao.deptLeadText}
+                        </td>
+					</tr>
+					<tr>
+                        <td>hr_text</td>
+                        <td>
+                            ${oaBaobiao.hrText}
+                        </td>
+					</tr>
+					<tr>
+                        <td>备注信息</td>
+                        <td>
+                            ${oaBaobiao.remarks}
+                        </td>
+                        <td>formmaker_text</td>
+                        <td>
+                            ${oaBaobiao.formmakerText}
+                        </td>
+					</tr>
+
+				</table>
+			</div>
+
+			<div class="box-footer">
+				<div class="row">
+					<div class="col-sm-offset-1 col-sm-11">
+						<button type="button" class="btn btn-sm btn-default" id="btnCancel" onclick="window.parent.closeCurrentTabPage();"><i class="fa fa-reply-all"></i> 关 闭</button>
+					</div>
+				</div>
+			</div>
+
+		</#form:form>
+
+		<#form:histoicFlow procInsId="${oaBaobiao.act.procInsId}" isSubTag="false"/>
+
+	</div>
+</div>
+<% } %>

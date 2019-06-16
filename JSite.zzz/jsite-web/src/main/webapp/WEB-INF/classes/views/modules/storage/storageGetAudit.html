@@ -1,0 +1,166 @@
+<% layout('/layout/default.html', {title: '仓储申请', libs: ['validate','dataGrid']}){ %>
+<div class="main-content">
+	<div class="box box-main">
+		<div class="box-header">
+			<div class="box-title">
+				<i class="fa fa-pencil-square-o"></i> 仓储申请
+			</div>
+		</div>
+		<#form:form id="inputForm" model="${storageGet}" action="${ctx}/storage/storageGet/saveAudit" method="post" class="form-horizontal">
+			<div class="box-body">
+				<#form:hidden path="id"/>
+				<#form:hidden path="act.taskId" value="${storageGet.act.taskId}"/>
+				<#form:hidden path="act.taskName" value="${storageGet.act.taskName}"/>
+				<#form:hidden path="act.taskDefKey" value="${storageGet.act.taskDefKey}"/>
+				<#form:hidden path="act.procInsId" value="${storageGet.act.procInsId}"/>
+				<#form:hidden path="act.procDefId" value="${storageGet.act.procDefId}"/>
+				<#form:hidden id="flag" path="act.flag"/>
+
+
+				<table class="table-view">
+					<tr>
+                        <td>流程实例编号</td>
+                        <td>
+                            ${storageGet.procInsId}
+                        </td>
+                        <td>开始时间</td>
+                        <td>
+                            ${storageGet.startTime}
+                        </td>
+					</tr>
+					<tr>
+                        <td>结束时间</td>
+                        <td>
+                            ${storageGet.endTime}
+                        </td>
+                        <td>请假类型</td>
+                        <td>
+                            ${storageGet.leaveType}
+                        </td>
+					</tr>
+					<tr>
+                        <td>申请时间</td>
+                        <td>
+                            ${storageGet.applyTime}
+                        </td>
+                        <td>备注信息</td>
+                        <td>
+                            ${storageGet.remarks}
+                        </td>
+					</tr>
+					<tr>
+                        <td>warehouse_id</td>
+                        <td>
+                            ${storageGet.warehouseId}
+                        </td>
+                        <td>carho_id</td>
+                        <td>
+                            ${storageGet.carhoId}
+                        </td>
+					</tr>
+					<tr>
+                        <td>left_num</td>
+                        <td>
+                            ${storageGet.leftNum}
+                        </td>
+                        <td>request_num</td>
+                        <td>
+                            ${storageGet.requestNum}
+                        </td>
+					</tr>
+
+					<tr>
+                        <td ><span class="required hide">*</span>您的意见<i class="fa icon-question hide"></i></td>
+						<td colspan="3" ><#form:textarea path="act.comment" rows="3" class="form-control input-xxlarge "/></td>
+                    </tr>
+					<tr>
+						<td>
+							<% if(hasPermi('oa_forms:oaFormsUploadProcess:edit')){ %>
+							<a href="#" onclick="checkBeforeUpload()" class="btn btn-default" title="上传文件"><i
+									class="fa fa-plus"></i>上传文件</a>
+							<% } %>
+						</td>
+					</tr>
+				</table>
+
+
+			</div>
+
+
+			<div class="box-footer">
+				<div class="row">
+					<div class="col-sm-offset-1 col-sm-11">
+					<% if (hasPermi('storage:storageGet:edit')){ %>
+						<button type="submit" class="btn btn-sm btn-primary" id="btnSubmit" onclick="$('#flag').val('yes')" ><i class="fa fa-check"></i> 同  意</button>
+						<button type="submit" class="btn btn-sm btn-danger" id="btnSubmit" onclick="$('#flag').val('no')" ><i class="fa fa-check"></i> 驳  回</button>
+					<% } %>
+						<button type="button" class="btn btn-sm btn-default" id="btnCancel" onclick="window.parent.closeCurrentTabPage();"><i class="fa fa-reply-all"></i> 关 闭</button>
+					</div>
+				</div>
+			</div>
+
+		</#form:form>
+
+		<#form:histoicFlow procInsId="${storageGet.act.procInsId}" isSubTag="false"/>
+
+	</div>
+</div>
+<% } %>
+
+<script type="text/javascript">
+	$("#inputForm").validate({
+		submitHandler: function(form){
+			js.ajaxSubmitForm($(form), function(data){
+				js.showMessage(data.message);
+				if(data.result == 'true'){
+					window.parent.closeCurrentTabPage(window.parent.refreshTab);
+				}
+			});
+	    }
+	});
+	function checkBeforeUpload(obj) {
+		js.layer.open({
+			type: 2,
+			area: ['65%', '50%'],
+			fixed: true, //不固定
+			maxmin: true,
+			title: '文件上传',
+			content: ['${ctx}/oa_forms/oaFormsUploadProcess/uploadFile', 'auto'],
+			end: function () {
+				dataGrid.refresh();
+			}
+		});
+	}
+</script>
+<script>
+
+	//初始化DataGrid对象
+	$('#dataGrid').dataGrid({
+		searchForm: $("#searchForm"),
+		columnModel: [
+			{header:'仓库号', name:'filename', index:'a.filename', width:90, align:"center"},
+			{header:'货物号', name:'uploadtime', index:'a.uploadtime', width:90, align:"center"},
+			{header:'余量', name:'formType', index:'a.form_type', width:90, align:"center"},
+			{header:'剩余量', name:'uploader', index:'a.uploader', width:90, align:"center"},
+			{header:'操作', name:'actions', width:100, sortable:false, title:false, align:"center",formatter: function(val, obj, row, act){
+
+					var actions = [];
+					//	actions.push('<a href="/oa_forms/oaFormsList/download?id='+row.id+'" class="btnList" title="下载"><i class="fa fa-download"></i></a>&nbsp;');
+					actions.push('<a href="${ctx}/oa_forms/oaFormsList/download?id='+row.id+'" title="下载" class="btn btn-default">下载<i class="fa fa-download"></i></a>');
+				<% if (hasPermi('oa_forms:oaFormsList:edit')){ %>
+						actions.push('<a href="${ctx}/oa_forms/oaFormsList/delete?id='+row.id+'" class="btnList" title="删除文件" data-confirm="确认要删除该文件吗？"><i class="fa fa-trash-o"></i></a>&nbsp;');
+
+
+					<% } %>
+
+					//	actions.push('<a href="/oa_forms/oaFormsList/download?id='+row.id+'" class="btnList" title="下载"><i class="fa fa-download"></i></a>&nbsp;');
+					return actions.join('');
+				}}
+		],
+		// 加载成功后执行事件
+		ajaxSuccess: function(data){
+
+		}
+	});
+</script>
+

@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jsite.modules.oa_forms.dao.OaFormsUploadProcessDao">
+    
+	<sql id="oaFormsUploadProcessColumns">
+		a.id AS "id",
+		a.proc_ins_id AS "procInsId",
+		a.start_time AS "startTime",
+		a.create_by AS "createBy.id",
+		a.update_by AS "updateBy.id",
+		a.update_date AS "updateDate",
+		a.remarks AS "remarks",
+		a.del_flag AS "delFlag"
+	</sql>
+	
+	<sql id="oaFormsUploadProcessJoins">
+	</sql>
+    
+	<select id="get" resultType="OaFormsUploadProcess">
+		SELECT 
+			<include refid="oaFormsUploadProcessColumns"/>
+		FROM oa_forms_upload_process a
+		<include refid="oaFormsUploadProcessJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="OaFormsUploadProcess">
+		SELECT 
+			<include refid="oaFormsUploadProcessColumns"/>
+		FROM oa_forms_upload_process a
+		<include refid="oaFormsUploadProcessJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+			<if test="procInsId != null and procInsId != ''">
+				AND a.proc_ins_id LIKE 
+					<if test="dbName == 'oracle'">'%'||#{procInsId}||'%'</if>
+					<if test="dbName == 'mssql'">'%'+#{procInsId}+'%'</if>
+					<if test="dbName == 'mysql'">concat('%',#{procInsId},'%')</if>
+			</if>
+			<if test="startTime != null and startTime != ''">
+				AND a.start_time = #{startTime}
+			</if>
+			<if test="createBy != null and createBy.id != null and createBy.id != ''">
+				AND a.create_by = #{createBy.id}
+			</if>
+			<if test="remarks != null and remarks != ''">
+				AND a.remarks LIKE 
+					<if test="dbName == 'oracle'">'%'||#{remarks}||'%'</if>
+					<if test="dbName == 'mssql'">'%'+#{remarks}+'%'</if>
+					<if test="dbName == 'mysql'">concat('%',#{remarks},'%')</if>
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="OaFormsUploadProcess">
+		SELECT 
+			<include refid="oaFormsUploadProcessColumns"/>
+		FROM oa_forms_upload_process a
+		<include refid="oaFormsUploadProcessJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO oa_forms_upload_process(
+			id,
+			proc_ins_id,
+			start_time,
+			create_by,
+			update_by,
+			update_date,
+			remarks,
+			del_flag
+		) VALUES (
+			#{id},
+			#{procInsId},
+			#{startTime},
+			#{createBy.id},
+			#{updateBy.id},
+			#{updateDate},
+			#{remarks},
+			#{delFlag}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE oa_forms_upload_process SET 	
+			proc_ins_id = #{procInsId},
+			start_time = #{startTime},
+			update_by = #{updateBy.id},
+			update_date = #{updateDate},
+			remarks = #{remarks}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		UPDATE oa_forms_upload_process SET 
+			del_flag = #{DEL_FLAG_DELETE}
+		WHERE id = #{id}
+	</update>
+
+	<insert id="setUploadedFile">
+
+	</insert>
+
+</mapper>

@@ -1,0 +1,70 @@
+<% layout('/layout/default.html', {title: '新闻', libs: ['dataGrid']}){ %>
+<div class="main-content">
+	<div class="box box-main">
+		<div class="box-header">
+			<div class="box-title">
+				<i class="fa fa-cubes"></i> 新闻
+			</div>
+			<div class="box-tools pull-right">
+				<a href="#" class="btn btn-default" id="btnSearch" title="查询"><i class="fa fa-filter"></i> 查询</a>
+				<% if(hasPermi('article:tArticle:edit')){ %>
+					<a href="/article/tArticle/form" class="btn btn-default btnTool"  title="新增新闻"><i class="fa fa-plus"></i> 新增</a>
+				<% } %>
+			</div>
+		</div>
+		<div class="box-body">
+			<form id="searchForm" action="${ctx}/article/tArticle/listData" method="post" class="form-inline hide" >
+				<div class="form-group">
+					<label class="control-label">标题：</label>
+					<div class="control-inline">
+						<input name="title"  maxlength="150" class="form-control"/>
+					</div>
+				</div>
+				
+				<div class="form-group">
+					<button type="submit" class="btn btn-primary btn-sm">查询</button>
+					<button type="reset" class="btn btn-default btn-sm">重置</button>
+				</div>
+			</form>			
+			<table id="dataGrid"></table>
+			<div id="dataGridPage"></div>
+		</div>
+	</div>
+</div>
+<% } %>
+<script>
+//初始化DataGrid对象
+$('#dataGrid').dataGrid({
+	searchForm: $("#searchForm"),
+	columnModel: [
+		{header:'标题', name:'title', index:'a.title', width:90, align:"center"},
+		{header:'操作', name:'actions', width:100, sortable:false, title:false, align:"center",formatter: function(val, obj, row, act){
+			var actions = [];
+			<% if(hasPermi('article:tArticle:edit')){ %>
+				actions.push('<a href="/article/tArticle/form?id='+row.id+'" class="btnList" title="编辑新闻"><i class="fa fa-pencil"></i></a>&nbsp;');
+				actions.push('<a href="${ctx}/article/tArticle/delete?id='+row.id+'" class="btnList" title="删除新闻" data-confirm="确认要删除该新闻吗？"><i class="fa fa-trash-o"></i></a>&nbsp;');
+			<% } %>
+			
+			return actions.join('');
+		}}
+	],
+	// 加载成功后执行事件
+	ajaxSuccess: function(data){
+		
+	}
+});
+</script>
+
+
+<script type="text/javascript">
+	$("#inputForm").validate({
+		submitHandler: function(form){
+			js.ajaxSubmitForm($(form), function(data){
+				js.showMessage(data.message);
+				if(data.result == 'true'){
+					window.parent.closeCurrentTabPage(window.parent.refreshTab);
+				}
+			});
+		}
+	});
+</script>

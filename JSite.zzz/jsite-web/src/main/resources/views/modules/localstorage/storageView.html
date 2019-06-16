@@ -1,0 +1,52 @@
+<% layout('/layout/default.html', {title: '32321', libs: ['']}){ %>
+<div class="main-content">
+	<div class="box box-main">
+		<div class="box-header">
+			<div class="box-title">
+				<i class="fa fa-pencil-square-o"></i> 32321详情
+			</div>
+		</div>
+		<#form:form id="inputForm" model="${storage}" action="#" method="post" class="form-horizontal">
+			<div class="box-body">
+
+
+				<table class="table-view">
+					<tr>
+                        <td>warehouse_id</td>
+                        <td>
+                            ${storage.warehouseId}
+                        </td>
+                        <td>cargo_id</td>
+                        <td>
+                            ${storage.cargoId}
+                        </td>
+					</tr>
+					<tr>
+                        <td>remaining</td>
+                        <td>
+                            ${storage.remaining}
+                        </td>
+                        <td>need</td>
+                        <td>
+                            ${storage.need}
+                        </td>
+					</tr>
+
+				</table>
+			</div>
+
+			<div class="box-footer">
+				<div class="row">
+					<div class="col-sm-offset-1 col-sm-11">
+						<button type="button" class="btn btn-sm btn-default" id="btnCancel" onclick="window.parent.closeCurrentTabPage();"><i class="fa fa-reply-all"></i> 关 闭</button>
+					</div>
+				</div>
+			</div>
+
+		</#form:form>
+
+		<#form:histoicFlow procInsId="${storage.act.procInsId}" isSubTag="false"/>
+
+	</div>
+</div>
+<% } %>

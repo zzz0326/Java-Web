@@ -1,0 +1,80 @@
+<link href="${ctxStatic}/modules/front/nav.css" rel="stylesheet" type="text/css">
+<!--link href="/front/css/nav.css" rel="stylesheet" type="text/css"-->
+<div class="second_banner">
+    <img src="${ctxStatic}/modules/front/img/logo.jpg" alt="">
+</div>
+
+<div id="nav">
+    <ul>
+        <li><a href="">首页</a></li>
+        <li class="navmenu"><a href="">走进兴和</a>
+            <ul>
+                <li><a href="#">公司简介</a> </li>
+                <li><a href="#">发展历史</a> </li>
+                <LI><A href="/zjxh/02/">发展历史</A></li>
+                <LI><A href="/zjxh/03/">公司架构</A></li>
+                <LI><A href="/zjxh/04/">公司荣誉</A></li>
+                <LI><A href="/zjxh/07/">公司画册</A></LI>
+                <LI><A href="/zjxh/06/">资质认证</A></LI>
+                <LI><A href="/zjxh/xz/">资料下载</A></LI>
+            </ul>
+        </li>
+        <li class="navmenu"><a href="">新闻中心</a>
+            <ul>
+                <li><a href="#">行业动态</a> </li>
+                <li><a href="#">公司新闻</a> </li>
+            </ul>
+        </li>
+        <li class="navmenu"><a href="">产品中心</a>
+            <ul>
+                <li class="navmenu1"><a href="#">电力母线</a>
+                    <ul>
+                        <li><a href="#">abc</a> </li>
+                        <li><a href="#">cfsv34</a> </li>
+                    </ul>
+                </li>
+                <li><a href="#">电力金具</a> </li>
+                <li><a href="#">特种导线</a> </li>
+            </ul>
+        </li>
+        <li class="navmenu"><a href="">工程案例    </a>
+            <ul>
+                <li><a href="#">电力母线案例</a> </li>
+                <li><a href="#">铝合金建筑案例</a> </li>
+            </ul>
+        </li>
+        <li><a href="">员工活动</a></li>
+        <li><a href="">人才招聘</a></li>
+        <li><a href="">联系我们</a></li>
+    </ul>
+</div>
+
+<script type="text/javascript">
+    $(function(){
+        $(".navmenu").mouseover(function(){
+            $(this).children("ul").show();
+        })
+
+    })
+    // 关键二：正确使用jQuey的语法完成行为。
+    $(function(){
+        $(".navmenu") .mouseout(function(){
+            $(this).children("ul").hide();
+        })
+
+    })
+
+    $(function(){
+        $(".navmenu1") .mouseout(function(){
+            $(this).children("ul").hide();
+        })
+
+    })
+
+    $(function(){
+        $(".navmenu1").mouseover(function(){
+            $(this).children("ul").show();
+        })
+
+    })
+</script>
